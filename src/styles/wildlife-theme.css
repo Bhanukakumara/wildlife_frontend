@@ -1,0 +1,37 @@
+/* Wildlife Theme Color Palette */
+:root {
+  /* Primary Greens */
+  --wildlife-primary: #2e7d32;
+  --wildlife-primary-light: #4caf50;
+  --wildlife-primary-dark: #1b5e20;
+  
+  /* Secondary Earth Tones */
+  --wildlife-secondary: #8d6e63;
+  --wildlife-secondary-light: #bcaaa4;
+  --wildlife-secondary-dark: #5d4037;
+  
+  /* Accent Colors */
+  --wildlife-accent-green: #64dd17;
+  --wildlife-accent-brown: #5d4037;
+  --wildlife-accent-gold: #ffd600;
+  
+  /* Backgrounds */
+  --wildlife-bg-light: #f5f5f5;
+  --wildlife-bg-dark: #121212;
+  --wildlife-bg-forest: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+  
+  /* Text Colors */
+  --wildlife-text-light: #ffffff;
+  --wildlife-text-dark: #212121;
+  --wildlife-text-muted: #757575;
+  
+  /* Status Colors */
+  --wildlife-success: #4caf50;
+  --wildlife-warning: #ff9800;
+  --wildlife-error: #f44336;
+  --wildlife-info: #2196f3;
+  
+  /* Shadows */
+  --wildlife-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+  --wildlife-shadow-hover: 0 6px 16px rgba(46, 125, 50, 0.3);
+}
