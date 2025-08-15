@@ -3,13 +3,6 @@ import type { ReactNode } from 'react';
 import AuthService from '../services/authService';
 import type { User as AuthUser } from '../services/authService';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  roles: string[];
-}
-
 interface AuthContextType {
   user: AuthUser | null;
   login: (email: string, password: string) => Promise<boolean>;
