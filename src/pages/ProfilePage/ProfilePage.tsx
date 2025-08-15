@@ -1,22 +1,65 @@
 import Navbar from '../../components/common/Navbar/Navbar.tsx';
 import Footer from '../../components/common/Footer/Footer';
+import { useState, useEffect } from 'react';
+import UserService from '../../services/userService';
+import type { User, Order } from '../../services/userService';
+import { useAuth } from '../../context/AuthContext';
 
 const ProfilePage = () => {
-  // Mock user data
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    joinDate: "January 15, 2023",
-    totalOrders: 12,
-    favoriteCategory: "Mammals"
+  const [user, setUser] = useState<User | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await UserService.getProfile();
+        const ordersData = await UserService.getOrders();
+        setUser(userData);
+        setOrders(ordersData);
+      } catch (err) {
+        setError('Failed to fetch profile data');
+        console.error('Error fetching profile data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLogout = () => {
+    logout();
   };
 
-  // Mock order history
-  const orders = [
-    { id: "ORD-001", date: "2023-05-15", total: 49.99, status: "Completed" },
-    { id: "ORD-002", date: "2023-04-22", total: 89.97, status: "Completed" },
-    { id: "ORD-003", date: "2023-03-10", total: 34.99, status: "Completed" },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <Navbar />
+        <div className="flex justify-center items-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <Navbar />
+        <div className="container mx-auto px-4 py-16">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error! </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
@@ -41,24 +84,24 @@ const ProfilePage = () => {
               <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
                 <div className="flex flex-col items-center mb-6">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center text-white text-4xl font-bold mb-4">
-                    {user.name.charAt(0)}
+                    {user?.name.charAt(0)}
                   </div>
-                  <h2 className="text-2xl font-bold text-green-800">{user.name}</h2>
-                  <p className="text-gray-600">{user.email}</p>
+                  <h2 className="text-2xl font-bold text-green-800">{user?.name}</h2>
+                  <p className="text-gray-600">{user?.email}</p>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="flex justify-between border-b border-gray-200 pb-2">
                     <span className="font-medium text-gray-600">Member Since</span>
-                    <span className="text-gray-800">{user.joinDate}</span>
+                    <span className="text-gray-800">{user?.joinDate}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-2">
                     <span className="font-medium text-gray-600">Total Orders</span>
-                    <span className="text-gray-800">{user.totalOrders}</span>
+                    <span className="text-gray-800">{user?.totalOrders}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-2">
                     <span className="font-medium text-gray-600">Favorite Category</span>
-                    <span className="text-gray-800">{user.favoriteCategory}</span>
+                    <span className="text-gray-800">{user?.favoriteCategory}</span>
                   </div>
                 </div>
                 
@@ -66,7 +109,10 @@ const ProfilePage = () => {
                   <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
                     Edit Profile
                   </button>
-                  <button className="w-full mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-300">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg transition duration-300"
+                  >
                     Logout
                   </button>
                 </div>

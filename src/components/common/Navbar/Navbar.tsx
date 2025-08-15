@@ -9,11 +9,19 @@ import { Menu } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
+import { useAuth } from "../../../context/AuthContext";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+  
   return (
     <header className="bg-green-500/30 backdrop-blur-md text-white shadow-lg top-0 z-50 border-b border-green-400/20">
       <div className="container mx-auto px-4">
@@ -63,37 +71,52 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <div className="relative">
-              <button
-                className="p-2 hover:bg-green-400/20 rounded-lg transition-colors"
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-              >
-                <div className="h-6 w-6 bg-green-300 rounded-full"></div>
-              </button>
+            {user ? (
+              <div className="relative">
+                <button
+                  className="p-2 hover:bg-green-400/20 rounded-lg transition-colors flex items-center"
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                >
+                  <div className="h-6 w-6 bg-green-300 rounded-full flex items-center justify-center text-white font-bold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </button>
 
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-md rounded-md shadow-lg py-1 z-10 border border-green-300/20">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
-                  >
-                    Orders
-                  </Link>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
-                  >
-                    Logout
-                  </a>
-                </div>
-              )}
-            </div>
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-md rounded-md shadow-lg py-1 z-10 border border-green-300/20">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Orders
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex space-x-2">
+                <Link to="/login" className="p-2 hover:bg-green-400/20 rounded-lg transition-colors">
+                  <span className="text-green-100">Login</span>
+                </Link>
+                <Link to="/register" className="p-2 hover:bg-green-400/20 rounded-lg transition-colors">
+                  <span className="text-green-100">Register</span>
+                </Link>
+              </div>
+            )}
 
             {/* Mobile menu button */}
             <button

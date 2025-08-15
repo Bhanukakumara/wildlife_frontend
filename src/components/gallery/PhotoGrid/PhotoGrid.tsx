@@ -1,11 +1,14 @@
 import PhotoCard from '../PhotoCard/PhotoCard';
 
 interface Photo {
-  id: number;
+  id: string;
   title: string;
   photographer: string;
   price: number;
   category?: string;
+  imageUrl: string;
+  description: string;
+  dateTaken: string;
 }
 
 interface PhotoGridProps {

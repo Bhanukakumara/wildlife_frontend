@@ -1,13 +1,13 @@
 interface CartItemProps {
   item: {
-    id: number;
+    id: string;
     title: string;
     photographer: string;
     price: number;
     quantity: number;
   };
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  onRemove: (id: number) => void;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemove: (id: string) => void;
   editable?: boolean;
 }
 

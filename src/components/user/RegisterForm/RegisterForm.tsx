@@ -1,29 +1,52 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../forms/Input/Input';
 import Button from '../../common/Button/Button';
+import { useAuth } from '../../../context/AuthContext';
 
-interface RegisterFormProps {
-  onRegister: (name: string, email: string, password: string) => void;
-}
-
-const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
+const RegisterForm: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
-    onRegister(name, email, password);
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      const success = await register(name, email, password);
+      if (success) {
+        // Redirect to profile page on successful registration
+        navigate('/profile');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred during registration');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+      
       <div className="mb-6">
         <Input
           label="Full Name"
@@ -68,8 +91,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
         />
       </div>
       
-      <Button type="submit" variant="primary" size="large" fullWidth={true}>
-        Create Account
+      <Button
+        type="submit"
+        variant="primary"
+        size="large"
+        fullWidth={true}
+        disabled={loading}
+      >
+        {loading ? 'Creating Account...' : 'Create Account'}
       </Button>
       
       <div className="mt-6 text-center">

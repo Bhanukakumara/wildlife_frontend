@@ -1,51 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/common/Navbar/Navbar.tsx';
 import Footer from '../../components/common/Footer/Footer';
 import CategoryFilter from '../../components/gallery/CategoryFilter/CategoryFilter';
 import Pagination from '../../components/gallery/Pagination/Pagination';
 import FilterBar from '../../components/gallery/FilterBar/FilterBar';
 import PhotoGrid from '../../components/gallery/PhotoGrid/PhotoGrid';
+import PhotoService from '../../services/photoService';
+import type { Photo, PhotoCategory } from '../../services/photoService';
 
 const GalleryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [categories, setCategories] = useState<PhotoCategory[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const photosPerPage = 12;
 
-  // Mock data for photos
-  const photos = [
-    { id: 1, title: 'Lion Portrait', photographer: 'John Smith', price: 49.99, category: 'mammals' },
-    { id: 2, title: 'Eagle in Flight', photographer: 'Jane Doe', price: 39.99, category: 'birds' },
-    { id: 3, title: 'Underwater Dolphin', photographer: 'Mike Johnson', price: 59.99, category: 'marine' },
-    { id: 4, title: 'Butterfly on Flower', photographer: 'Sarah Wilson', price: 29.99, category: 'others' },
-    { id: 5, title: 'Elephant Family', photographer: 'David Brown', price: 69.99, category: 'mammals' },
-    { id: 6, title: 'Penguin Colony', photographer: 'Lisa Garcia', price: 45.99, category: 'marine' },
-    { id: 7, title: 'Tiger in Jungle', photographer: 'Robert Kim', price: 54.99, category: 'mammals' },
-    { id: 8, title: 'Parrot Close-up', photographer: 'Emma Davis', price: 34.99, category: 'birds' },
-    { id: 9, title: 'Sea Turtle', photographer: 'Chris Miller', price: 42.99, category: 'marine' },
-    { id: 10, title: 'Deer in Forest', photographer: 'Amy Taylor', price: 37.99, category: 'mammals' },
-    { id: 11, title: 'Hummingbird', photographer: 'Mark Anderson', price: 32.99, category: 'birds' },
-    { id: 12, title: 'Snake in Grass', photographer: 'Jennifer Lee', price: 28.99, category: 'reptiles' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch categories only once
+        if (categories.length === 0) {
+          const categoriesData = await PhotoService.getCategories();
+          setCategories(categoriesData);
+        }
+        
+        // Fetch photos
+        const photosData = await PhotoService.getPhotos({
+          category: selectedCategory === 'all' ? undefined : selectedCategory,
+          page: currentPage - 1,
+          size: photosPerPage,
+          sort: sortBy
+        });
+        
+        setPhotos(photosData.content);
+        setTotalPages(photosData.totalPages);
+      } catch (err) {
+        setError('Failed to fetch gallery data');
+        console.error('Error fetching gallery data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Filter photos by category
-  const filteredPhotos = selectedCategory === 'all' 
-    ? photos 
-    : photos.filter(photo => photo.category === selectedCategory);
+    fetchData();
+  }, [selectedCategory, currentPage, sortBy]);
 
-  // Sort photos
-  const sortedPhotos = [...filteredPhotos].sort((a, b) => {
-    if (sortBy === 'newest') return b.id - a.id;
-    if (sortBy === 'oldest') return a.id - b.id;
-    if (sortBy === 'price-low') return a.price - b.price;
-    if (sortBy === 'price-high') return b.price - a.price;
-    return 0;
-  });
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <Navbar />
+        <div className="flex justify-center items-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
-  // Pagination
-  const totalPages = Math.ceil(sortedPhotos.length / photosPerPage);
-  const startIndex = (currentPage - 1) * photosPerPage;
-  const paginatedPhotos = sortedPhotos.slice(startIndex, startIndex + photosPerPage);
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <Navbar />
+        <div className="container mx-auto px-4 py-16">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Error! </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
@@ -72,6 +103,7 @@ const GalleryPage = () => {
                 <CategoryFilter 
                   selectedCategory={selectedCategory} 
                   onSelectCategory={setSelectedCategory} 
+                  categories={categories}
                 />
               </div>
             </div>
@@ -82,11 +114,11 @@ const GalleryPage = () => {
               <FilterBar 
                 sortBy={sortBy} 
                 onSortChange={setSortBy} 
-                photoCount={sortedPhotos.length}
+                photoCount={photos.length}
               />
 
               {/* Photo Grid */}
-              <PhotoGrid photos={paginatedPhotos} />
+              <PhotoGrid photos={photos} />
 
               {/* Pagination */}
               {totalPages > 1 && (
