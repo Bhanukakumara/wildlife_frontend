@@ -31,7 +31,8 @@ export interface User {
 class AuthService {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+      const response = await apiClient.post<AuthResponse>('http://localhost:8080/api/auth/login', credentials);
+      console.log(response.data.token);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed');

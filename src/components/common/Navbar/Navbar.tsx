@@ -98,6 +98,15 @@ const Navbar = () => {
                     >
                       Orders
                     </Link>
+                    {(user?.roles.includes('admin') || user?.roles.includes('ADMIN')) && (
+                      <Link
+                        to="/admin"
+                        className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
@@ -171,6 +180,52 @@ const Navbar = () => {
             <div className="mt-4 pt-4 border-t border-green-400/20">
               <SearchBar />
             </div>
+            {user ? (
+              <div className="mt-4 pt-4 border-t border-green-400/20">
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-2 p-2 hover:bg-green-400/20 rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span className="text-green-100">Profile</span>
+                </Link>
+                {(user?.roles.includes('admin') || user?.roles.includes('ADMIN')) && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center space-x-2 p-2 hover:bg-green-400/20 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="text-green-100">Admin Dashboard</span>
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center space-x-2 p-2 hover:bg-green-400/20 rounded-lg transition-colors w-full text-left"
+                >
+                  <span className="text-green-100">Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 pt-4 border-t border-green-400/20 flex space-x-2">
+                <Link
+                  to="/login"
+                  className="flex-1 text-center p-2 hover:bg-green-400/20 rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span className="text-green-100">Login</span>
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex-1 text-center p-2 hover:bg-green-400/20 rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span className="text-green-100">Register</span>
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>

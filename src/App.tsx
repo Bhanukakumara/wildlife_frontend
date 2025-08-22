@@ -3,7 +3,7 @@ import("@fontsource/roboto/400.css");
 import("@fontsource/roboto/500.css");
 import("@fontsource/roboto/700.css");
 import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
 // Page Components
@@ -22,11 +22,13 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage/OrderConfirmati
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import AuthGuard from './components/common/AuthGuard';
+import AdminDashboardPage from './pages/AdminDashboardPage/AdminDashboardPage';
+import AdminAuthGuard from './components/admin/AdminAuthGuard';
 
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/gallery" element={<GalleryPage />} />
@@ -57,9 +59,14 @@ const App = () => {
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/features" element={<FeaturePage />} />
           <Route path="/photo/:id" element={<PhotoDetailsPage />} />
+          <Route path="/admin" element={
+            <AdminAuthGuard>
+              <AdminDashboardPage />
+            </AdminAuthGuard>
+          } />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
 };
