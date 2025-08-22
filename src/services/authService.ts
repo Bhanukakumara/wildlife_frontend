@@ -12,10 +12,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    name: string;
+  token: string; // Only token is returned by the backend login endpoint
     email: string;
     roles: string[];
   };
@@ -29,10 +26,15 @@ export interface User {
 }
 
 class AuthService {
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
+  async login(credentials: LoginRequest): Promise<{ token: string }> { // Updated return type
     try {
-      const response = await apiClient.post<AuthResponse>('http://localhost:8080/api/auth/login', credentials);
-      console.log(response.data);
+      const response = await apiClient.post<{ token: string }>('/api/auth/login', credentials); // Updated endpoint and response type
+      
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token); // Store token in local storage
+      }
+
+      console.log('Login successful, token received:', response.data.token);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed');
@@ -48,9 +50,16 @@ class AuthService {
     }
   }
 
+
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await apiClient.get<User>('http://localhost:8080/api/auth/me');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await apiClient.get<User>('/api/auth/me', { // Updated endpoint
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch user data');

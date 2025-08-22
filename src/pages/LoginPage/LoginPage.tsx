@@ -22,18 +22,17 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await authService.login(formData);
-      // Always save the JWT token to localStorage
-      localStorage.setItem("token", response.token);
-      
+      await authService.login(formData);
+
       // Save user data based on "Remember me" checkbox
+      const user = await authService.getCurrentUser();
       const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem("user", JSON.stringify(response.user));
-      
+      storage.setItem("user", JSON.stringify(user));
+
       // Check if user is admin and redirect accordingly
-      const isAdmin = response.user.roles.includes('admin') || response.user.roles.includes('ADMIN');
+      const isAdmin = user.roles.includes('admin') || user.roles.includes('ADMIN');
       if (isAdmin) {
-        navigate("/admin");
+        navigate("/admin"); // Assuming your admin dashboard route is /admin-dashboard
       } else {
         navigate("/");
       }
