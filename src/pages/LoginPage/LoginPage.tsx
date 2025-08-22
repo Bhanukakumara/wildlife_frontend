@@ -31,7 +31,7 @@ const LoginPage = () => {
       storage.setItem("user", JSON.stringify(response.user));
       
       // Check if user is admin and redirect accordingly
-      const isAdmin = response.user.role.includes('admin') || response.user.role.includes('ADMIN');
+      const isAdmin = response.user.roles.includes('admin') || response.user.roles.includes('ADMIN');
       if (isAdmin) {
         navigate("/admin");
       } else {
