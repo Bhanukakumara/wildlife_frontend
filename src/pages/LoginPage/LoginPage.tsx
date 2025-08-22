@@ -32,7 +32,7 @@ const LoginPage = () => {
       // Check if user is admin and redirect accordingly
       const isAdmin = user.roles.includes('ADMIN'); // Assuming roles are in uppercase
       if (isAdmin) {
-        navigate("/admin-dashboard"); // Assuming your admin dashboard route is /admin-dashboard
+        navigate("/admin"); // Assuming your admin dashboard route is /admin-dashboard
       } else {
         navigate("/");
       }
