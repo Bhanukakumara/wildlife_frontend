@@ -17,13 +17,13 @@ export interface AuthResponse {
     id: string;
     name: string;
     email: string;
-    roles: string[];
+    role: string[];
   };
 }
 
 export interface User {
   id: string;
-  name: string;
+  displayName: string;
   email: string;
   roles: string[];
 }
@@ -32,7 +32,7 @@ class AuthService {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
       const response = await apiClient.post<AuthResponse>('http://localhost:8080/api/auth/login', credentials);
-      console.log(response.data.token);
+      console.log(response.data);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed');
@@ -41,7 +41,7 @@ class AuthService {
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/register', userData);
+      const response = await apiClient.post<AuthResponse>('http://localhost:8080/api/auth/create', userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
@@ -50,7 +50,7 @@ class AuthService {
 
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await apiClient.get<User>('/auth/me');
+      const response = await apiClient.get<User>('http://localhost:8080/api/auth/me');
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch user data');

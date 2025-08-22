@@ -23,12 +23,15 @@ const LoginPage = () => {
     setError(null);
     try {
       const response = await authService.login(formData);
+      // Always save the JWT token to localStorage
+      localStorage.setItem("token", response.token);
+      
+      // Save user data based on "Remember me" checkbox
       const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem("token", response.token);
       storage.setItem("user", JSON.stringify(response.user));
       
       // Check if user is admin and redirect accordingly
-      const isAdmin = response.user.roles.includes('admin') || response.user.roles.includes('ADMIN');
+      const isAdmin = response.user.role.includes('admin') || response.user.role.includes('ADMIN');
       if (isAdmin) {
         navigate("/admin");
       } else {

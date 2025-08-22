@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import AuthService from '../services/authService';
-import type { User as AuthUser } from '../services/authService';
+import type { AuthResponse, User as AuthUser } from '../services/authService';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -19,7 +19,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,9 +50,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await AuthService.login({ email, password });
       
-      setUser(response.user);
+      setUser({ id: response.user.id, displayName: response.user.name, email: response.user.email, roles: response.user.role });
       localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem('user', JSON.stringify({ id: response.user.id, displayName: response.user.name, email: response.user.email, roles: response.user.role }));
       
       return true;
     } catch (error) {
@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await AuthService.register({ name, email, password });
       
-      setUser(response.user);
+      setUser();
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
       

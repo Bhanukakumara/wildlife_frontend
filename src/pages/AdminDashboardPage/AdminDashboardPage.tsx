@@ -1,43 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import CustomerManagement from '../../components/admin/CustomerManagement/CustomerManagement';
 import ProductManagement from '../../components/admin/ProductManagement/ProductManagement';
 import OrderManagement from '../../components/admin/OrderManagement/OrderManagement';
-import { Navigate } from 'react-router-dom';
 
 const AdminDashboardPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('customers');
   
   // Check if user has admin role
   const isAdmin = user?.roles.includes('admin') || user?.roles.includes('ADMIN');
   
   if (!isAdmin) {
     // Redirect to home page if user is not admin
-    return <Navigate to="/" replace />;
+    navigate('/', { replace: true });
+    return null;
   }
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'customers':
+        return <CustomerManagement />;
+      case 'products':
+        return <ProductManagement />;
+      case 'orders':
+        return <OrderManagement />;
+      default:
+        return <CustomerManagement />;
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage customers, products, and orders</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Customer Management</h2>
-          <CustomerManagement />
+    <div className="min-h-screen bg-gray-50">
+      {/* Admin Navbar */}
+      <header className="bg-green-600 text-white shadow-md">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center">
+            <h1 className="text-xl font-bold">Admin Dashboard</h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="hidden md:inline">Welcome, {user?.displayName}</span>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition duration-300"
+            >
+              Logout
+            </button>
+          </div>
         </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Product Management</h2>
-          <ProductManagement />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Order Management</h2>
-          <OrderManagement />
-        </div>
+      </header>
+
+      <div className="flex">
+        {/* Side Navigation Panel */}
+        <nav className="w-64 bg-white shadow-md min-h-screen">
+          <div className="p-4">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Management</h2>
+            <ul>
+              <li className="mb-2">
+                <button
+                  onClick={() => setActiveSection('customers')}
+                  className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
+                    activeSection === 'customers'
+                      ? 'bg-green-100 text-green-700 font-medium'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Customer Management
+                </button>
+              </li>
+              <li className="mb-2">
+                <button
+                  onClick={() => setActiveSection('products')}
+                  className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
+                    activeSection === 'products'
+                      ? 'bg-green-100 text-green-700 font-medium'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Product Management
+                </button>
+              </li>
+              <li className="mb-2">
+                <button
+                  onClick={() => setActiveSection('orders')}
+                  className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
+                    activeSection === 'orders'
+                      ? 'bg-green-100 text-green-700 font-medium'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Order Management
+                </button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        {/* Main Content Area */}
+        <main className="flex-1 p-6">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              {activeSection === 'customers' && 'Customer Management'}
+              {activeSection === 'products' && 'Product Management'}
+              {activeSection === 'orders' && 'Order Management'}
+            </h2>
+            {renderActiveSection()}
+          </div>
+        </main>
       </div>
     </div>
   );

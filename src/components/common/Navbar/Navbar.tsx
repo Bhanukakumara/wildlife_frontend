@@ -78,7 +78,7 @@ const Navbar = () => {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                 >
                   <div className="h-6 w-6 bg-green-300 rounded-full flex items-center justify-center text-white font-bold">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user.displayName.charAt(0).toUpperCase()}
                   </div>
                 </button>
 
