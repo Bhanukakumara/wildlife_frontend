@@ -2,14 +2,22 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar/Navbar.tsx';
 import Footer from '../../components/common/Footer/Footer';
+import userService, { UserCreateDto, User } from '../../services/userService';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    displayName: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    gender: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,15 +25,36 @@ const RegisterPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
     console.log('Registration attempt:', formData);
-    // Simulate registration success
-    navigate('/profile');
+
+    const userToCreate: UserCreateDto = {
+      email: formData.email,
+      firstName: formData.firstName,
+      middleName: formData.middleName,
+      lastName: formData.lastName,
+      displayName: formData.displayName,
+      password: formData.password,
+      phoneNumber: formData.phoneNumber,
+      dateOfBirth: formData.dateOfBirth, // This might need formatting depending on backend
+      gender: formData.gender as any, // Type casting may be needed
+      profilePicture: '', // Assuming profile picture upload is separate
+      role: 'USER' as any, // Default role
+      accountStatus: 'ACTIVE' as any, // Default status
+    };
+
+    try {
+      await userService.createUser(userToCreate);
+      navigate('/login'); // Redirect to login on successful registration
+    } catch (err: any) {
+      setError(err.message || 'Registration failed. Please try again.');
+    }
   };
 
   return (
@@ -50,14 +79,68 @@ const RegisterPage = () => {
               <h2 className="text-2xl font-bold text-center mb-8 text-green-800">Sign Up</h2>
               
               <form onSubmit={handleSubmit}>
+
                 <div className="mb-6">
-                  <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
+                  <label htmlFor="firstName" className=\"block text-gray-700 font-medium mb-2\">First Name</label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
                     onChange={handleChange}
+                    required
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    placeholder="John"
+                  />
+                </div>
+
+                <div className=\"mb-6\">
+                  <label htmlFor="middleName" className=\"block text-gray-700 font-medium mb-2\">Middle Name</label>
+                  <input
+                    type="text"
+                    id="middleName"
+                    name="middleName"
+                    value={formData.middleName}
+                    onChange={handleChange}
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    placeholder="Middle"
+                  />
+                </div>
+
+                <div className=\"mb-6\">
+                  <label htmlFor="lastName" className=\"block text-gray-700 font-medium mb-2\">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    placeholder="Doe"
+                  />
+                </div>
+
+                <div className=\"mb-6\">
+                  <label htmlFor="displayName" className=\"block text-gray-700 font-medium mb-2\">Display Name</label>
+                  <input
+                    type="text"
+                    id="displayName"
+                    name="displayName"
+                    value={formData.displayName}
+                    onChange={handleChange}
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    placeholder="WildlifeFan"
+                  />
+                </div>
+
+                <div className=\"mb-6\">
+                  <label htmlFor="phoneNumber" className=\"block text-gray-700 font-medium mb-2\">Phone Number</label>
+                  <input
+                    type="text"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="John Doe"
@@ -78,6 +161,43 @@ const RegisterPage = () => {
                   />
                 </div>
                 
+                <div className=\"mb-6\">
+                  <label htmlFor="dateOfBirth" className=\"block text-gray-700 font-medium mb-2\">Date of Birth</label>
+                  <input
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                  />
+                </div>
+
+                 <div className=\"mb-6\">
+                  <label htmlFor="gender" className=\"block text-gray-700 font-medium mb-2\">Gender</label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
+                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+
+                {error && (
+                  <div className=\"mb-6 text-red-500 text-sm text-center\">
+                    {error}
+                  </div>
+                )}
+
+                {/* Password fields */}
+
+
                 <div className="mb-6">
                   <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
                   <input
@@ -105,6 +225,7 @@ const RegisterPage = () => {
                     placeholder="••••••••"
                   />
                 </div>
+
                 
                 <div className="mb-6">
                   <button

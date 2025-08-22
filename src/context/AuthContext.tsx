@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Token is invalid, clear it
           localStorage.removeItem('token');
           localStorage.removeItem('user');
+ window.location.href = '/login'; // Redirect to login page
         })
         .finally(() => {
           setLoading(false);
@@ -64,9 +65,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       const response = await AuthService.register({ name, email, password });
-      
-      setUser();
+
       localStorage.setItem('token', response.token);
+      // Assuming the register response also returns a user object
       localStorage.setItem('user', JSON.stringify(response.user));
       
       return true;
@@ -78,6 +79,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     AuthService.logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
