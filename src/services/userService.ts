@@ -62,7 +62,7 @@ export interface Page<T> {
 class UserService {
   async createUser(userData: UserCreateDto): Promise<User> {
     try {
-      const response = await apiClient.post<User>('/api/user/create', userData);
+      const response = await apiClient.post<User>('http://localhost:8080/api/user/create', userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch profile');

@@ -78,7 +78,7 @@ const Navbar = () => {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                 >
                   <div className="h-6 w-6 bg-green-300 rounded-full flex items-center justify-center text-white font-bold">
-                    {user.displayName.charAt(0).toUpperCase()}
+                    {user.displayName?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 </button>
 
@@ -98,7 +98,7 @@ const Navbar = () => {
                     >
                       Orders
                     </Link>
-                    {(user?.roles.includes('admin') || user?.roles.includes('ADMIN')) && (
+                    {user?.role && (user.role === 'admin' || user.role === 'ADMIN') && (
                       <Link
                         to="/admin"
                         className="block px-4 py-2 text-sm text-green-100 hover:bg-green-400/20"
@@ -189,7 +189,7 @@ const Navbar = () => {
                 >
                   <span className="text-green-100">Profile</span>
                 </Link>
-                {(user?.roles.includes('admin') || user?.roles.includes('ADMIN')) && (
+                {user?.role && (user.role === 'admin' || user.role === 'ADMIN') && (
                   <Link
                     to="/admin"
                     className="flex items-center space-x-2 p-2 hover:bg-green-400/20 rounded-lg transition-colors"

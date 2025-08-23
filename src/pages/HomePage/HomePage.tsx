@@ -10,7 +10,7 @@ const HomePage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-r from-green-600 to-emerald-700 text-white">
+      <section className=" py-20 md:py-32 bg-gradient-to-r from-green-600 to-emerald-700 text-white">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">Capture the Wild</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
