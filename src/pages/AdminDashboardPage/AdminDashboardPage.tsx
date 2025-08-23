@@ -32,6 +32,8 @@ const AdminDashboardPage: React.FC = () => {
         return <ProductManagement />;
       case 'orders':
         return <OrderManagement />;
+ case 'countries':
+ return <div>Country Management Content Here</div>; // Placeholder for Country Management component
       default:
         return <CustomerManagement />;
     }
@@ -99,6 +101,18 @@ const AdminDashboardPage: React.FC = () => {
                   Order Management
                 </button>
               </li>
+              <li className="mb-2">
+                <button
+ onClick={() => setActiveSection('countries')}
+ className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
+ activeSection === 'countries'
+ ? 'bg-green-100 text-green-700 font-medium'
+ : 'text-gray-600 hover:bg-gray-100'
+ }`}
+ >
+ Country Management
+ </button>
+ </li>
             </ul>
           </div>
         </nav>
@@ -110,6 +124,7 @@ const AdminDashboardPage: React.FC = () => {
               {activeSection === 'customers' && 'Customer Management'}
               {activeSection === 'products' && 'Product Management'}
               {activeSection === 'orders' && 'Order Management'}
+              {activeSection === 'countries' && 'Country Management'}
             </h2>
             {renderActiveSection()}
           </div>
