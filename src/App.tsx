@@ -54,7 +54,6 @@ const App = () => {
           <Route path="/order-confirmation" element={
             <AuthGuard>
               <OrderConfirmationPage />
-            </AuthGuard>
           } />
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/features" element={<FeaturePage />} />
