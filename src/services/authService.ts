@@ -15,8 +15,7 @@ export interface AuthResponse {
   token: string; // Only token is returned by the backend login endpoint
     email: string;
     roles: string[];
-  };
-}
+  }
 
 export interface User {
   id: string;
@@ -28,7 +27,7 @@ export interface User {
 class AuthService {
   async login(credentials: LoginRequest): Promise<{ token: string }> { // Updated return type
     try {
-      const response = await apiClient.post<{ token: string }>('/api/auth/login', credentials); // Updated endpoint and response type
+      const response = await apiClient.post<{ token: string }>('http://localhost:8080/api/auth/login', credentials); // Updated endpoint and response type
       
       if (response.data && response.data.token) {
         localStorage.setItem('token', response.data.token); // Store token in local storage
@@ -57,7 +56,7 @@ class AuthService {
       if (!token) {
         throw new Error('No token found');
       }
-      const response = await apiClient.get<User>('/api/auth/me', { // Updated endpoint
+      const response = await apiClient.get<User>('http://localhost:8080/api/auth/me', { // Updated endpoint
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
