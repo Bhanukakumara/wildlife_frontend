@@ -19,7 +19,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
-import { getAllCountries, createCountry, updateCountry, deleteCountry } from '../../services/countryService';
+import countryService from '../../services/countryService';
 
 interface Country {
   id?: number;
@@ -46,7 +46,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
 
   const fetchCountries = async () => {
     try {
-      const data = await getAllCountries();
+      const data = await countryService.getAllCountries();
       setCountries(data);
     } catch (error) {
       console.error("Error fetching countries:", error);
@@ -56,7 +56,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
 
   const handleAddCountry = async (country: Country) => {
     try {
-      await createCountry(country);
+      await countryService.createCountry(country);
       showAlert('success', 'Country added successfully!');
       await fetchCountries();
     } catch (error: any) {
@@ -66,7 +66,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
   };
  const handleUpdateCountry = async (country: Country) => {
     try {
-      await updateCountry(country.id!, country);
+      await countryService.updateCountry(country.id!, country);
       showAlert('success', 'Country updated successfully!');
       await fetchCountries();
     } catch (error: any) {
@@ -77,7 +77,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
 
   const handleDeleteCountry = async (id: number) => {
     try {
-      await deleteCountry(id);
+      await countryService.deleteCountry(id);
       showAlert('success', 'Country deleted successfully!');
       await fetchCountries();
     } catch (error: any) {
@@ -143,7 +143,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
   const handleDelete = (id?: number) => {
     // Confirmation dialog could be added here
     if (id !== undefined) {
-      deleteCountry(id);
+      handleDeleteCountry(id);
     }
   };
 
