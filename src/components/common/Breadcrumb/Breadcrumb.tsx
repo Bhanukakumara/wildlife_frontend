@@ -1,21 +1,26 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import type { BreadcrumbItem } from '../../../types/Breadcrumb';
 
-const Breadcrumb = () => {
+interface BreadcrumbProps {
+  items: BreadcrumbItem[];
+}
+
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <div className="py-4">
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/gallery"
-        >
-          Gallery
-        </Link>
-        <Typography sx={{ color: "text.primary" }}>Photo Details</Typography>
-      </Breadcrumbs>
+      {items.map((item, index) => (
+        <span key={item.path}>
+          {index > 0 && ' > '}
+          {index === items.length - 1 ? (
+            <span className="text-primary">{item.label}</span>
+          ) : (
+            <Link to={item.path} className="text-decoration-none text-muted">
+              {item.label}
+            </Link>
+          )}
+        </span>
+      ))}
     </div>
   );
 };
