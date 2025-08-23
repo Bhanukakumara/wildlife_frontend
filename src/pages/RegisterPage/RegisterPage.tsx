@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar/Navbar.tsx';
 import Footer from '../../components/common/Footer/Footer';
-import userService, { UserCreateDto, User } from '../../services/userService';
+import userService, { type UserCreateDto } from '../../services/userService';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ const RegisterPage = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -81,7 +81,7 @@ const RegisterPage = () => {
               <form onSubmit={handleSubmit}>
 
                 <div className="mb-6">
-                  <label htmlFor="firstName" className=\"block text-gray-700 font-medium mb-2\">First Name</label>
+                  <label htmlFor="firstName" className="block text-gray-700 font-medium mb-2">First Name</label>
                   <input
                     type="text"
                     id="firstName"
@@ -89,26 +89,26 @@ const RegisterPage = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     required
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="John"
                   />
                 </div>
 
-                <div className=\"mb-6\">
-                  <label htmlFor="middleName" className=\"block text-gray-700 font-medium mb-2\">Middle Name</label>
+                <div className="mb-6">
+                  <label htmlFor="middleName" className="block text-gray-700 font-medium mb-2">Middle Name</label>
                   <input
                     type="text"
                     id="middleName"
                     name="middleName"
                     value={formData.middleName}
                     onChange={handleChange}
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Middle"
                   />
                 </div>
 
-                <div className=\"mb-6\">
-                  <label htmlFor="lastName" className=\"block text-gray-700 font-medium mb-2\">Last Name</label>
+                <div className="mb-6">
+                  <label htmlFor="lastName" className="block text-gray-700 font-medium mb-2">Last Name</label>
                   <input
                     type="text"
                     id="lastName"
@@ -116,31 +116,32 @@ const RegisterPage = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     required
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Doe"
                   />
                 </div>
 
-                <div className=\"mb-6\">
-                  <label htmlFor="displayName" className=\"block text-gray-700 font-medium mb-2\">Display Name</label>
+                <div className="mb-6">
+                  <label htmlFor="displayName" className="block text-gray-700 font-medium mb-2">Display Name</label>
                   <input
                     type="text"
                     id="displayName"
                     name="displayName"
                     value={formData.displayName}
                     onChange={handleChange}
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="WildlifeFan"
                   />
                 </div>
 
-                <div className=\"mb-6\">
-                  <label htmlFor="phoneNumber" className=\"block text-gray-700 font-medium mb-2\">Phone Number</label>
+                <div className="mb-6">
+                  <label htmlFor="phoneNumber" className="block text-gray-700 font-medium mb-2">Phone Number</label>
                   <input
                     type="text"
                     id="phoneNumber"
                     name="phoneNumber"
                     value={formData.phoneNumber}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="John Doe"
@@ -161,26 +162,26 @@ const RegisterPage = () => {
                   />
                 </div>
                 
-                <div className=\"mb-6\">
-                  <label htmlFor="dateOfBirth" className=\"block text-gray-700 font-medium mb-2\">Date of Birth</label>
+                <div className="mb-6">
+                  <label htmlFor="dateOfBirth" className="block text-gray-700 font-medium mb-2">Date of Birth</label>
                   <input
                     type="date"
                     id="dateOfBirth"
                     name="dateOfBirth"
                     value={formData.dateOfBirth}
                     onChange={handleChange}
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
                 </div>
 
-                 <div className=\"mb-6\">
-                  <label htmlFor="gender" className=\"block text-gray-700 font-medium mb-2\">Gender</label>
+                 <div className="mb-6">
+                  <label htmlFor="gender" className="block text-gray-700 font-medium mb-2">Gender</label>
                   <select
                     id="gender"
                     name="gender"
                     value={formData.gender}
-                    onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
-                    className=\"w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
                     <option value="">Select Gender</option>
                     <option value="MALE">Male</option>
@@ -190,7 +191,7 @@ const RegisterPage = () => {
                 </div>
 
                 {error && (
-                  <div className=\"mb-6 text-red-500 text-sm text-center\">
+                  <div className="mb-6 text-red-500 text-sm text-center">
                     {error}
                   </div>
                 )}
