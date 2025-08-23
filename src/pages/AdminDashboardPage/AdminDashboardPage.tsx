@@ -1,39 +1,40 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import CustomerManagement from '../../components/admin/CustomerManagement/CustomerManagement';
-import ProductManagement from '../../components/admin/ProductManagement/ProductManagement';
-import OrderManagement from '../../components/admin/OrderManagement/OrderManagement';
+import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import CustomerManagement from "../../components/admin/CustomerManagement/CustomerManagement";
+import ProductManagement from "../../components/admin/ProductManagement/ProductManagement";
+import OrderManagement from "../../components/admin/OrderManagement/OrderManagement";
+import CountryManagement from "./CountryManagementPage";
 
 const AdminDashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState('customers');
-  
+  const [activeSection, setActiveSection] = useState("customers");
+
   // Check if user has admin role
-  const isAdmin = (user?.role === 'admin') || (user?.role ==='ADMIN');
-  
+  const isAdmin = user?.role === "admin" || user?.role === "ADMIN";
+
   if (!isAdmin) {
     // Redirect to home page if user is not admin
-    navigate('/', { replace: true });
+    navigate("/", { replace: true });
     return null;
   }
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case 'customers':
+      case "customers":
         return <CustomerManagement />;
-      case 'products':
+      case "products":
         return <ProductManagement />;
-      case 'orders':
+      case "orders":
         return <OrderManagement />;
- case 'countries':
- return <div>Country Management Content Here</div>; // Placeholder for Country Management component
+      case "countries":
+        return <CountryManagement />; // Use the actual Country Management component
       default:
         return <CustomerManagement />;
     }
@@ -48,7 +49,9 @@ const AdminDashboardPage: React.FC = () => {
             <h1 className="text-xl font-bold">Admin Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="hidden md:inline">Welcome, {user?.displayName}</span>
+            <span className="hidden md:inline">
+              Welcome, {user?.displayName}
+            </span>
             <button
               onClick={handleLogout}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition duration-300"
@@ -63,15 +66,17 @@ const AdminDashboardPage: React.FC = () => {
         {/* Side Navigation Panel */}
         <nav className="w-64 bg-white shadow-md min-h-screen">
           <div className="p-4">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Management</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">
+              Management
+            </h2>
             <ul>
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveSection('customers')}
+                  onClick={() => setActiveSection("customers")}
                   className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
-                    activeSection === 'customers'
-                      ? 'bg-green-100 text-green-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-100'
+                    activeSection === "customers"
+                      ? "bg-green-100 text-green-700 font-medium"
+                      : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
                   Customer Management
@@ -79,11 +84,11 @@ const AdminDashboardPage: React.FC = () => {
               </li>
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveSection('products')}
+                  onClick={() => setActiveSection("products")}
                   className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
-                    activeSection === 'products'
-                      ? 'bg-green-100 text-green-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-100'
+                    activeSection === "products"
+                      ? "bg-green-100 text-green-700 font-medium"
+                      : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
                   Product Management
@@ -91,11 +96,11 @@ const AdminDashboardPage: React.FC = () => {
               </li>
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveSection('orders')}
+                  onClick={() => setActiveSection("orders")}
                   className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
-                    activeSection === 'orders'
-                      ? 'bg-green-100 text-green-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-100'
+                    activeSection === "orders"
+                      ? "bg-green-100 text-green-700 font-medium"
+                      : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
                   Order Management
@@ -103,16 +108,16 @@ const AdminDashboardPage: React.FC = () => {
               </li>
               <li className="mb-2">
                 <button
- onClick={() => setActiveSection('countries')}
- className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
- activeSection === 'countries'
- ? 'bg-green-100 text-green-700 font-medium'
- : 'text-gray-600 hover:bg-gray-100'
- }`}
- >
- Country Management
- </button>
- </li>
+                  onClick={() => setActiveSection("countries")}
+                  className={`w-full text-left px-4 py-2 rounded-md transition duration-300 ${
+                    activeSection === "countries"
+                      ? "bg-green-100 text-green-700 font-medium"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Country Management
+                </button>
+              </li>
             </ul>
           </div>
         </nav>
@@ -121,10 +126,10 @@ const AdminDashboardPage: React.FC = () => {
         <main className="flex-1 p-6">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              {activeSection === 'customers' && 'Customer Management'}
-              {activeSection === 'products' && 'Product Management'}
-              {activeSection === 'orders' && 'Order Management'}
-              {activeSection === 'countries' && 'Country Management'}
+              {activeSection === "customers" && "Customer Management"}
+              {activeSection === "products" && "Product Management"}
+              {activeSection === "orders" && "Order Management"}
+              {activeSection === "countries" && "Country Management"}
             </h2>
             {renderActiveSection()}
           </div>

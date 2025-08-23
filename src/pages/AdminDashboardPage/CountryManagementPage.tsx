@@ -47,6 +47,7 @@ const CountryManagement: React.FC<CountryManagementProps> = () => {
   const fetchCountries = async () => {
     try {
       const data = await countryService.getAllCountries();
+      console.log(data);
       setCountries(data);
     } catch (error) {
       console.error("Error fetching countries:", error);
