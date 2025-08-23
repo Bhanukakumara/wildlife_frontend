@@ -26,13 +26,16 @@ const LoginPage = () => {
 
       // Save user data based on "Remember me" checkbox
       const user = await authService.getCurrentUser();
+      console.log(user);
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem("user", JSON.stringify(user));
 
       // Check if user is admin and redirect accordingly
-      const isAdmin = user.roles.includes('admin') || user.roles.includes('ADMIN');
+      const isAdmin = user.role && (user.role === 'admin') || (user.role ==='ADMIN');
+      console.log("User role:", user.role);
+      console.log("Is admin:", isAdmin);
       if (isAdmin) {
-        navigate("/admin"); // Assuming your admin dashboard route is /admin-dashboard
+        navigate("/admin");
       } else {
         navigate("/");
       }

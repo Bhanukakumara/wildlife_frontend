@@ -11,7 +11,7 @@ const AdminDashboardPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('customers');
   
   // Check if user has admin role
-  const isAdmin = user?.roles.includes('admin') || user?.roles.includes('ADMIN');
+  const isAdmin = (user?.role === 'admin') || (user?.role ==='ADMIN');
   
   if (!isAdmin) {
     // Redirect to home page if user is not admin

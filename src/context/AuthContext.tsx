@@ -19,7 +19,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<AuthResponse | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,9 +51,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await AuthService.login({ email, password });
       
-      setUser({ id: response.user.id, displayName: response.user.name, email: response.user.email, roles: response.user.role });
+      // After successful login, fetch user data
+      const userData = await AuthService.getCurrentUser();
+      
+      setUser(userData);
       localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify({ id: response.user.id, displayName: response.user.name, email: response.user.email, roles: response.user.role }));
+      localStorage.setItem('user', JSON.stringify(userData));
       
       return true;
     } catch (error) {
@@ -67,8 +70,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await AuthService.register({ name, email, password });
 
       localStorage.setItem('token', response.token);
-      // Assuming the register response also returns a user object
-      localStorage.setItem('user', JSON.stringify(response.user));
+      // After successful registration, fetch user data
+      const userData = await AuthService.getCurrentUser();
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
       
       return true;
     } catch (error) {

@@ -11,7 +11,7 @@ const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({ children }) => {
   const navigate = useNavigate();
 
   // Check if user has admin role
-  const isAdmin = user && user.roles && (user.roles.includes('admin') || user.roles.includes('ADMIN'));
+  const isAdmin = user && user.role && (user.role === 'ADMIN');
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
