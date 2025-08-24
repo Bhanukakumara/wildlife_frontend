@@ -19,7 +19,7 @@ interface PhotoCardProps {
 
 const PhotoCard = ({ photo }: PhotoCardProps) => {
   return (
-    <Link to={`/photos/${photo.id}`}>
+    <Link to={`/product-items/${photo.id}`}>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer">
         <div className="h-48 bg-gradient-to-r from-green-300 to-emerald-400">
           {photo.imageUrl ? (

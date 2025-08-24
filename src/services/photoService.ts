@@ -96,7 +96,7 @@ class PhotoService {
 
   async getPhotoById(id: string): Promise<Photo> {
     try {
-      const response = await apiClient.get<Photo>(`/photos/${id}`);
+      const response = await apiClient.get<Photo>(`http://localhost:8080/api/product-items/${id}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Failed to fetch photo");

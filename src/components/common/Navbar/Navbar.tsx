@@ -10,11 +10,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { useAuth } from "../../../context/AuthContext";
+import { useCart } from "../../../context/CartContext";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { cartItemCount } = useCart();
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -66,9 +68,11 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <Link to="/cart" className="relative p-2 hover:bg-green-400/20 rounded-lg transition-colors">
               <ShoppingCart className="h-6 w-6 text-green-200" />
-              <span className="absolute -top-1 -right-1 bg-red-500/80 backdrop-blur-sm text-xs rounded-full h-5 w-5 flex items-center justify-center text-white">
-                3
-              </span>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500/80 backdrop-blur-sm text-xs rounded-full h-5 w-5 flex items-center justify-center text-white">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
 
             {user ? (

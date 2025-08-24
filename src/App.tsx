@@ -5,6 +5,7 @@ import("@fontsource/roboto/700.css");
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 // Page Components
 import HomePage from './pages/HomePage/HomePage';
@@ -28,45 +29,47 @@ import AdminAuthGuard from './components/admin/AdminAuthGuard';
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={
-            <AuthGuard>
-              <ProfilePage />
-            </AuthGuard>
-          } />
-          <Route path="/cart" element={
-            <AuthGuard>
-              <CartPage />
-            </AuthGuard>
-          } />
-          <Route path="/checkout" element={
-            <AuthGuard>
-              <CheckoutPage />
-            </AuthGuard>
-          } />
-          <Route path="/order-confirmation" element={
-            <AuthGuard>
-              <OrderConfirmationPage />
-            </AuthGuard>
-          } />
-          <Route path="/search" element={<SearchResultsPage />} />
-          <Route path="/features" element={<FeaturePage />} />
-          <Route path="/photo/:id" element={<PhotoDetailsPage />} />
-          <Route path="/admin" element={
-            <AdminAuthGuard>
-              <AdminDashboardPage />
-            </AdminAuthGuard>
-          } />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Router>
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/profile" element={
+              <AuthGuard>
+                <ProfilePage />
+              </AuthGuard>
+            } />
+            <Route path="/cart" element={
+              <AuthGuard>
+                <CartPage />
+              </AuthGuard>
+            } />
+            <Route path="/checkout" element={
+              <AuthGuard>
+                <CheckoutPage />
+              </AuthGuard>
+            } />
+            <Route path="/order-confirmation" element={
+              <AuthGuard>
+                <OrderConfirmationPage />
+              </AuthGuard>
+            } />
+            <Route path="/search" element={<SearchResultsPage />} />
+            <Route path="/features" element={<FeaturePage />} />
+            <Route path="/product-items/:id" element={<PhotoDetailsPage />} />
+            <Route path="/admin" element={
+              <AdminAuthGuard>
+                <AdminDashboardPage />
+              </AdminAuthGuard>
+            } />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 };

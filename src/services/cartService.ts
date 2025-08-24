@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 
 export interface CartItem {
   id: string;
-  photoId: string;
+  productItemId: string;
   title: string;
   price: number;
   quantity: number;
@@ -16,23 +16,23 @@ export interface Cart {
 }
 
 export interface AddToCartRequest {
-  photoId: string;
+  productItemId: string;
   quantity: number;
 }
 
 class CartService {
-  async getCart(): Promise<Cart> {
+  async getCart(userId:string): Promise<Cart> {
     try {
-      const response = await apiClient.get<Cart>('/cart');
+      const response = await apiClient.get<Cart>(`/shopping-cart/user/${userId}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch cart');
     }
   }
 
-  async addToCart(request: AddToCartRequest): Promise<Cart> {
+  async addToCart(request: AddToCartRequest, userId: string): Promise<Cart> {
     try {
-      const response = await apiClient.post<Cart>('/cart', request);
+      const response = await apiClient.post<Cart>(`/shopping-cart/user/${userId}/items`, request);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to add item to cart');
@@ -41,7 +41,7 @@ class CartService {
 
   async updateCartItem(id: string, quantity: number): Promise<Cart> {
     try {
-      const response = await apiClient.put<Cart>(`/cart/items/${id}`, { quantity });
+      const response = await apiClient.put<Cart>(`/api/shopping-cart/cart/items/${id}`, { quantity });
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to update cart item');
