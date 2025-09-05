@@ -23,7 +23,7 @@ export interface AddToCartRequest {
 class CartService {
   async getCart(userId:string): Promise<Cart> {
     try {
-      const response = await apiClient.get<Cart>(`/shopping-cart/user/${userId}`);
+      const response = await apiClient.get<Cart>(`/shopping-cart/get-by-user-id/${userId}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch cart');

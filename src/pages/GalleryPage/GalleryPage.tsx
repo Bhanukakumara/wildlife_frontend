@@ -13,6 +13,7 @@ interface Photo {
   id: string;
   name: string;
   description: string;
+  price: number;
   imageUrl: string;
   active: boolean;
   createdAt: string;
@@ -53,6 +54,7 @@ const GalleryPage = () => {
           name: photo.name,
           imageUrl: photo.imageUrl,
           description: photo.description || "No description available",
+          price: photo.price || 0, // Default to 0 if price is missing
           active: true, // Default to active
           createdAt: photo.createdAt || new Date().toISOString(),
           updatedAt: photo.updatedAt || new Date().toISOString(),

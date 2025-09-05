@@ -2,7 +2,7 @@
 @import "./styles/wildlife-theme.css";
 
 :root {
-  --color-main: #A8D8B9;
-  --color-secondary: #6BBF8A;
-  --color-accent: #5A4A42;
+  --color-main: #00ff59;
+  --color-secondary: #395845;
+  --color-accent: #000000;
 }

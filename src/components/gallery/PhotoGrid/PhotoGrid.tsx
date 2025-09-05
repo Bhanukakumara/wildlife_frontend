@@ -4,6 +4,7 @@ interface Photo {
   id: string;
   name: string;
   description: string;
+  price: number;
   imageUrl: string;
   active: boolean;
   createdAt: string;
@@ -20,8 +21,8 @@ interface PhotoGridProps {
 const PhotoGrid = ({ photos }: PhotoGridProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {photos.map((photos) => (
-        <PhotoCard key={photos.id} photos={photos} />
+      {photos.map((photo) => (
+        <PhotoCard key={photo.id} photo={photo} />
       ))}
     </div>
   );
