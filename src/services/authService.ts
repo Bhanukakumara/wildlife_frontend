@@ -13,9 +13,9 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string; // Only token is returned by the backend login endpoint
-    email: string;
-    roles: string[];
-  }
+  email: string;
+  roles: string[];
+}
 
 export interface User {
   id: string;
@@ -56,7 +56,7 @@ class AuthService {
       if (!token) {
         throw new Error('No token found');
       }
-      const response = await apiClient.get<User>('http://localhost:8080/api/auth/me', { // Updated endpoint
+      const response = await apiClient.get<User>('/auth/me', { // Updated endpoint
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;

@@ -37,7 +37,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Token is invalid, clear it
           localStorage.removeItem('token');
           localStorage.removeItem('user');
- window.location.href = '/login'; // Redirect to login page
+          // Let the router handle navigation instead of window.location.href
+          // window.location.href = '/login'; // Redirect to login page
         })
         .finally(() => {
           setLoading(false);

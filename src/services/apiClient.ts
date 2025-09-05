@@ -34,7 +34,8 @@ apiClient.interceptors.response.use(
       // Handle unauthorized access
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Let the application handle navigation instead of automatic redirect
+      // window.location.href = '/login';
     }
     return Promise.reject(error);
   }

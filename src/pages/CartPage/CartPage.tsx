@@ -8,7 +8,6 @@ import CartSummary from '../../components/cart/CartSummary/CartSummary';
 import CartService from '../../services/cartService';
 import type { Cart } from '../../services/cartService';
 import { useCart } from '../../context/CartContext';
-import userService from '../../services/userService.ts';
 import authService from '../../services/authService.ts';
 
 const CartPage = () => {

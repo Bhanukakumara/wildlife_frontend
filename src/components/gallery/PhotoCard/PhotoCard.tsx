@@ -5,12 +5,12 @@ interface Photo {
   name: string;
   description: string;
   imageUrl: string;
+  price: number;
   active: boolean;
   createdAt: string;
   updatedAt: string;
   createdBy: string;
   updatedBy: string;
-  photos: Photo[];
 }
 
 interface PhotoCardProps {
@@ -34,7 +34,7 @@ const PhotoCard = ({ photo }: PhotoCardProps) => {
           <h3 className="text-lg font-bold mb-1 text-green-800">{photo.name}</h3>
           <p className="text-gray-600 text-sm mb-3">by {photo.description}</p>
           <div className="flex justify-between items-center">
-            <span className="text-amber-600 font-bold">${photo.active}</span>
+            <span className="text-amber-600 font-bold">${photo.price.toFixed(2)}</span>
             <button
               className="bg-green-600 hover:bg-green-700 text-white text-sm py-1 px-3 rounded-full transition duration-300"
               onClick={(e) => e.stopPropagation()} // Prevent link navigation when clicking button

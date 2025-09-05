@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../components/common/Navbar/Navbar.tsx";
 import Footer from "../../components/common/Footer/Footer";
-import authService from "../../services/authService.ts";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ const LoginPage = () => {
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,22 +23,30 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
     try {
-      await authService.login(formData);
-
-      // Save user data based on "Remember me" checkbox
-      const user = await authService.getCurrentUser();
-      console.log(user);
-      const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem("user", JSON.stringify(user));
-
-      // Check if user is admin and redirect accordingly
-      const isAdmin = user.role && (user.role === 'admin') || (user.role ==='ADMIN');
-      console.log("User role:", user.role);
-      console.log("Is admin:", isAdmin);
-      if (isAdmin) {
-        navigate("/admin");
+      const success = await login(formData.email, formData.password);
+      
+      if (success) {
+        // Save user data based on "Remember me" checkbox
+        const storage = rememberMe ? localStorage : sessionStorage;
+        // The user data is already set in the AuthContext, we just need to save it to storage
+        // The AuthContext handles saving to localStorage, but we also respect the rememberMe setting
+        
+        // Check if user is admin and redirect accordingly
+        // We can now access the user directly from the AuthContext
+        if (user) {
+          const isAdmin = user.role && (user.role === 'admin' || user.role === 'ADMIN');
+          console.log("User role:", user.role);
+          console.log("Is admin:", isAdmin);
+          if (isAdmin) {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
+        } else {
+          navigate("/");
+        }
       } else {
-        navigate("/");
+        setError("Login failed. Please check your credentials and try again.");
       }
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
