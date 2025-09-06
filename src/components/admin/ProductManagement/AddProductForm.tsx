@@ -27,7 +27,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
   const [customizable, setCustomizable] = useState(false);
   const [freeShipping, setFreeShipping] = useState(false);
   const [qtyInStock, setQtyInStock] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState<
     { value: string; label: string }[]
@@ -72,13 +72,19 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
     fetchMainProduct();
   }, []);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const newProduct = {
+      const productItem = {
         name,
         sku,
         description,
@@ -91,11 +97,17 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
         customizable,
         freeShipping,
         qtyInStock: parseInt(qtyInStock) || 0,
-        imageUrl,
         productId: selectedProduct ? parseInt(selectedProduct) : 1,
+        categoryId,
       };
 
-      await photoService.createProduct(newProduct);
+      const formData = new FormData();
+      formData.append("productItem", new Blob([JSON.stringify(productItem)], { type: "application/json" }));
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      await photoService.createProduct(formData);
       onSuccess();
     } catch (err: any) {
       setError(err.message || "Failed to create product");
@@ -220,17 +232,22 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
             fullWidth
           />
 
-          <Input
-            label="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            fullWidth
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Product Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+          </div>
 
           <Select
             label="Main Product"
             value={selectedProduct}
-            onChange={(e) => {setSelectedProduct(e.target.id);}}
+            onChange={(e) => setSelectedProduct(e.target.value)}
             options={productOptions.map((product) => ({
               value: product.id.toString(),
               label: product.name,
@@ -265,7 +282,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
           >
             Cancel
           </Button>
-          <Button type="submit" variant="primary" disabled={loading}>
+          <Button type="submit" variant="primary" disabled={loading || !imageFile}>
             {loading ? "Adding..." : "Add Product"}
           </Button>
         </div>

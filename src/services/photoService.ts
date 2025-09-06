@@ -13,8 +13,8 @@ export interface Photo {
   customizable: boolean;
   freeShipping: boolean;
   qtyInStock: number;
-  imageUrl: string;
   productId: number;
+  categoryId: string;
 }
 
 export interface PhotoCategory {
@@ -47,37 +47,6 @@ export interface PhotoSearchRequest {
 }
 
 class PhotoService {
-  // async getPhotos(searchRequest: PhotoSearchRequest = {}): Promise<PaginatedResponse<Photo>> {
-  //   try {
-  //     const params = new URLSearchParams();
-
-  //     if (searchRequest.category) {
-  //       params.append('category', searchRequest.category);
-  //     }
-
-  //     if (searchRequest.searchTerm) {
-  //       params.append('searchTerm', searchRequest.searchTerm);
-  //     }
-
-  //     if (searchRequest.page !== undefined) {
-  //       params.append('page', searchRequest.page.toString());
-  //     }
-
-  //     if (searchRequest.size !== undefined) {
-  //       params.append('size', searchRequest.size.toString());
-  //     }
-
-  //     if (searchRequest.sort) {
-  //       params.append('sort', searchRequest.sort);
-  //     }
-
-  //     const response = await apiClient.get<PaginatedResponse<Photo>>(`/photos?${params.toString()}`);
-  //     return response.data;
-  //   } catch (error: any) {
-  //     throw new Error(error.response?.data?.message || 'Failed to fetch photos');
-  //   }
-  // }
-
   async getAllPhotos(): Promise<Photo[]> {
     try {
       const response = await apiClient.get<Photo[]>(
@@ -126,9 +95,13 @@ class PhotoService {
     }
   }
 
-  async createProduct(productData: Photo): Promise<Photo> {
+  async createProduct(formData: FormData): Promise<Photo> {
     try {
-      const response = await apiClient.post<Photo>('/product-items/create', productData);
+      const response = await apiClient.post<Photo>('/product-items/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to create product');
