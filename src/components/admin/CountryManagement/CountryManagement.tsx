@@ -19,7 +19,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
-import countryService from '../../services/countryService';
+import countryService from '../../../services/countryService';
 
 interface Country {
   id?: number;

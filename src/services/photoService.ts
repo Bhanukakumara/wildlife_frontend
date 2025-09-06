@@ -1,7 +1,6 @@
 import apiClient from "./apiClient";
 
 export interface Photo {
-  id: string;
   name: string;
   sku: string;
   description: string;
@@ -15,8 +14,6 @@ export interface Photo {
   freeShipping: boolean;
   qtyInStock: number;
   imageUrl: string;
-  createdAt: string;
-  updatedAt: string;
   productId: number;
 }
 
@@ -126,6 +123,24 @@ class PhotoService {
       throw new Error(
         error.response?.data?.message || "Failed to fetch featured photos"
       );
+    }
+  }
+
+  async createProduct(productData: Photo): Promise<Photo> {
+    try {
+      const response = await apiClient.post<Photo>('/product-items/create', productData);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to create product');
+    }
+  }
+
+  async getAllMainProducts(): Promise<{id: number; name: string}[]> {
+    try {
+      const response = await apiClient.get<{id: number; name: string}[]>('http://localhost:8080/api/products/get-all');
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch main products');
     }
   }
 }

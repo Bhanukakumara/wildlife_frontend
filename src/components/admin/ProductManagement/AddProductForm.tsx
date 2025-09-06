@@ -8,10 +8,10 @@ import photoService from '../../../services/photoService';
 
 interface AddProductFormProps {
   onCancel: () => void;
-  onSubmit: (product: any) => void;
+  onSuccess: () => void;
 }
 
-const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) => {
+const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) => {
   const [name, setName] = useState('');
   const [sku, setSku] = useState('');
   const [description, setDescription] = useState('');
@@ -27,6 +27,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) =
   const [imageUrl, setImageUrl] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
+  const [productOptions, setProductOptions] = useState<{ id: number; name: string }[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -45,7 +47,21 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) =
       }
     };
 
+    const fetchMainProduct = async () => {
+      try {
+        const mainProductData = await photoService.getAllMainProducts();
+        const productOptions = mainProductData.map(product => ({
+          id: product.id,
+          name: product.name
+        }));
+        setProductOptions(productOptions);
+      } catch (err) {
+        console.error('Failed to fetch main products:', err);
+      }
+    };
+
     fetchCategories();
+    fetchMainProduct();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +70,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) =
     setError('');
 
     try {
-      // In a real implementation, this would call an API to create the product
       const newProduct = {
         name,
         sku,
@@ -69,13 +84,14 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) =
         freeShipping,
         qtyInStock: parseInt(qtyInStock) || 0,
         imageUrl,
-        productId: categoryId ? parseInt(categoryId) : 0
+        productId: categoryId ? parseInt(categoryId) : 0,
+        relatedProductId: selectedProduct ? parseInt(selectedProduct) : undefined
       };
 
-      // Call the onSubmit callback with the new product data
-      onSubmit(newProduct);
-    } catch (err) {
-      setError('Failed to create product');
+      await photoService.createProduct(newProduct);
+      onSuccess();
+    } catch (err: any) {
+      setError(err.message || 'Failed to create product');
       console.error('Error creating product:', err);
     } finally {
       setLoading(false);
@@ -201,6 +217,14 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSubmit }) =
             label="Image URL"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
+            fullWidth
+          />
+
+          <Select
+            label="Main Product Category"
+            value={selectedProduct}
+            onChange={(e) => setSelectedProduct(e.target.value)}
+            options={productOptions.map(product => ({ value: product.id.toString(), label: product.name }))}
             fullWidth
           />
         </div>

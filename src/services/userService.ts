@@ -87,11 +87,9 @@ class UserService {
     }
   }
 
-  async getAllUsers(page: number = 0, size: number = 10, sort: string = 'id,asc'): Promise<Page<User>> {
+  async getAllUsers(): Promise<User[]> {
     try {
-      const response = await apiClient.get<Page<User>>('/api/user/get-all', {
-        params: { page, size, sort }
-      });
+      const response = await apiClient.get<User[]>('/user/get-all');
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch users');

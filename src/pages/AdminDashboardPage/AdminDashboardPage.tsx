@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomerManagement from "../../components/admin/CustomerManagement/CustomerManagement";
 import ProductManagement from "../../components/admin/ProductManagement/ProductManagement";
 import OrderManagement from "../../components/admin/OrderManagement/OrderManagement";
-import CountryManagement from "./CountryManagementPage";
+import CountryManagement from "../../components/admin/CountryManagement/CountryManagement";
 
 const AdminDashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
