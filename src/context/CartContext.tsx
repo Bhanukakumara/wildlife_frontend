@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext';
 
 interface CartContextType {
   cartItemCount: number;
-  fetchCart: () => Promise<void>;
+  refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -35,13 +35,34 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   };
 
+  const fetchCartItemCount = async () => {
+    try {
+      if (user) {
+        const cartItemCount: number = await cartService.getItemCount(user.id);
+        setCartItemCount(cartItemCount);
+      } else {
+        // For non-logged in users, we could use localStorage or similar
+        // For now, we'll just show 0
+        setCartItemCount(0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch cart item count:', error);
+      setCartItemCount(0);
+    }
+  };
+
   useEffect(() => {
-    fetchCart();
+    // fetchCart();
+    fetchCartItemCount();
   }, [user]);
+
+  const refreshCart = async () => {
+    await fetchCartItemCount();
+  };
 
   const value = {
     cartItemCount,
-    fetchCart
+    refreshCart,
   };
 
   return (

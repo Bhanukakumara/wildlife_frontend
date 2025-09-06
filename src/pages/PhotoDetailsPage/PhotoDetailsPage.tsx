@@ -135,7 +135,7 @@ const PhotoDetailsPage = () => {
               
               {photo.qtyInStock > 0 && (
                 <AddToCartForm
-                  productItemId={photo.id}
+                  productItemId={parseInt(photo.id)}
                   price={photo.price}
                   title={photo.name}
                 />

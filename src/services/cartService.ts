@@ -16,7 +16,7 @@ export interface Cart {
 }
 
 export interface AddToCartRequest {
-  productItemId: string;
+  productItemId: number;
   quantity: number;
 }
 
@@ -30,9 +30,23 @@ class CartService {
     }
   }
 
+  async getItemCount(userId:string): Promise<number> {
+    try {
+      const response = await apiClient.get<number>(`/shopping-cart/get-item-count/${userId}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch cart item count');
+    }
+  }
+
   async addToCart(request: AddToCartRequest, userId: string): Promise<Cart> {
     try {
-      const response = await apiClient.post<Cart>(`/shopping-cart/user/${userId}/items`, request);
+      const response = await apiClient.post<Cart>(`/shopping-cart/add-item/${userId}/items`, null, {
+        params: {
+          productItemId: request.productItemId,
+          quantity: request.quantity,
+        },
+      });
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to add item to cart');

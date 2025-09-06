@@ -5,12 +5,12 @@ import authService, { type User } from '../../../services/authService';
 import { useCart } from '../../../context/CartContext';
 
 interface AddToCartRequest {
-  productItemId: string; // Changed from photoId to match backend DTO
+  productItemId: number; // Changed to match backend
   quantity: number;
 }
 
 interface AddToCartFormProps {
-  productItemId: string; // Changed from photoId to match backend DTO
+  productItemId: number; // Changed to match backend
   price: number;
   title: string; // Added to display product name in success message
   onAddToCart?: () => void;
@@ -21,7 +21,7 @@ const AddToCartForm = ({ productItemId, price, title, onAddToCart }: AddToCartFo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { fetchCart } = useCart();
+  const { cartItemCount, refreshCart } = useCart();
 
   const handleQuantityChange = (value: number) => {
     if (value >= 1) {
@@ -49,7 +49,7 @@ const AddToCartForm = ({ productItemId, price, title, onAddToCart }: AddToCartFo
       await cartService.addToCart(request, userData.id);
       
       // Update cart count in Navbar
-      await fetchCart();
+      await refreshCart();
 
       setSuccess(`${quantity} ${title}${quantity > 1 ? 's' : ''} added to cart successfully!`);
       
