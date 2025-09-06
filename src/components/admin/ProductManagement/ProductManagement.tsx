@@ -72,7 +72,6 @@ const ProductManagement: React.FC = () => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b">ID</th>
                   <th className="py-2 px-4 border-b">Name</th>
                   <th className="py-2 px-4 border-b">SKU</th>
                   <th className="py-2 px-4 border-b">Price</th>
@@ -82,8 +81,7 @@ const ProductManagement: React.FC = () => {
               </thead>
               <tbody>
                 {products.map((product) => (
-                  <tr key={product.id}>
-                    <td className="py-2 px-4 border-b">{product.id}</td>
+                  <tr key={product.sku}>
                     <td className="py-2 px-4 border-b">{product.name}</td>
                     <td className="py-2 px-4 border-b">{product.sku}</td>
                     <td className="py-2 px-4 border-b">${product.price}</td>

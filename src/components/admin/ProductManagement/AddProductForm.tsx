@@ -1,62 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import Input from '../../forms/Input/Input';
-import TextArea from '../../forms/TextArea/TextArea';
-import Select from '../../forms/Select/Select';
-import Checkbox from '../../forms/Checkbox/Checkbox';
-import Button from '../../common/Button/Button';
-import photoService from '../../../services/photoService';
+import React, { useState, useEffect } from "react";
+import Input from "../../forms/Input/Input";
+import TextArea from "../../forms/TextArea/TextArea";
+import Select from "../../forms/Select/Select";
+import Checkbox from "../../forms/Checkbox/Checkbox";
+import Button from "../../common/Button/Button";
+import photoService from "../../../services/photoService";
 
 interface AddProductFormProps {
   onCancel: () => void;
   onSuccess: () => void;
 }
 
-const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) => {
-  const [name, setName] = useState('');
-  const [sku, setSku] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [weight, setWeight] = useState('');
-  const [weightUnit, setWeightUnit] = useState('kg');
-  const [length, setLength] = useState('');
-  const [width, setWidth] = useState('');
-  const [height, setHeight] = useState('');
+const AddProductForm: React.FC<AddProductFormProps> = ({
+  onCancel,
+  onSuccess,
+}) => {
+  const [name, setName] = useState("");
+  const [sku, setSku] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [weight, setWeight] = useState("");
+  const [weightUnit, setWeightUnit] = useState("kg");
+  const [length, setLength] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
   const [customizable, setCustomizable] = useState(false);
   const [freeShipping, setFreeShipping] = useState(false);
-  const [qtyInStock, setQtyInStock] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
-  const [productOptions, setProductOptions] = useState<{ id: number; name: string }[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState('');
+  const [qtyInStock, setQtyInStock] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [categories, setCategories] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [productOptions, setProductOptions] = useState<
+    { id: number; name: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const categoryData = await photoService.getCategories();
-        const categoryOptions = categoryData.map(category => ({
+        const categoryOptions = categoryData.map((category) => ({
           value: category.id,
-          label: category.name
+          label: category.name,
         }));
         setCategories(categoryOptions);
       } catch (err) {
-        console.error('Failed to fetch categories:', err);
-        setError('Failed to load categories');
+        console.error("Failed to fetch categories:", err);
+        setError("Failed to load categories");
       }
     };
 
     const fetchMainProduct = async () => {
       try {
         const mainProductData = await photoService.getAllMainProducts();
-        const productOptions = mainProductData.map(product => ({
+        const productOptions = mainProductData.map((product) => ({
           id: product.id,
-          name: product.name
+          name: product.name,
         }));
+        console.log("Fetched main products:", productOptions);
         setProductOptions(productOptions);
       } catch (err) {
-        console.error('Failed to fetch main products:', err);
+        console.error("Failed to fetch main products:", err);
       }
     };
 
@@ -67,7 +75,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const newProduct = {
@@ -84,15 +92,14 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
         freeShipping,
         qtyInStock: parseInt(qtyInStock) || 0,
         imageUrl,
-        productId: categoryId ? parseInt(categoryId) : 0,
-        relatedProductId: selectedProduct ? parseInt(selectedProduct) : undefined
+        productId: selectedProduct ? parseInt(selectedProduct) : 1,
       };
 
       await photoService.createProduct(newProduct);
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Failed to create product');
-      console.error('Error creating product:', err);
+      setError(err.message || "Failed to create product");
+      console.error("Error creating product:", err);
     } finally {
       setLoading(false);
     }
@@ -101,7 +108,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4">Add New Product</h3>
-      
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
           {error}
@@ -117,7 +124,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             required
             fullWidth
           />
-          
+
           <Input
             label="SKU"
             value={sku}
@@ -125,7 +132,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             required
             fullWidth
           />
-          
+
           <div className="md:col-span-2">
             <TextArea
               label="Description"
@@ -135,7 +142,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
               fullWidth
             />
           </div>
-          
+
           <Input
             label="Price ($)"
             type="number"
@@ -145,7 +152,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             required
             fullWidth
           />
-          
+
           <Input
             label="Quantity in Stock"
             type="number"
@@ -154,7 +161,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             required
             fullWidth
           />
-          
+
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Weight"
@@ -169,15 +176,15 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
               value={weightUnit}
               onChange={(e) => setWeightUnit(e.target.value)}
               options={[
-                { value: 'kg', label: 'kg' },
-                { value: 'g', label: 'g' },
-                { value: 'lb', label: 'lb' },
-                { value: 'oz', label: 'oz' }
+                { value: "kg", label: "kg" },
+                { value: "g", label: "g" },
+                { value: "lb", label: "lb" },
+                { value: "oz", label: "oz" },
               ]}
               fullWidth
             />
           </div>
-          
+
           <div className="grid grid-cols-3 gap-4">
             <Input
               label="Length"
@@ -204,7 +211,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
               fullWidth
             />
           </div>
-          
+
           <Select
             label="Category"
             value={categoryId}
@@ -212,7 +219,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             options={categories}
             fullWidth
           />
-          
+
           <Input
             label="Image URL"
             value={imageUrl}
@@ -221,14 +228,17 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
           />
 
           <Select
-            label="Main Product Category"
+            label="Main Product"
             value={selectedProduct}
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            options={productOptions.map(product => ({ value: product.id.toString(), label: product.name }))}
+            onChange={(e) => {setSelectedProduct(e.target.id);}}
+            options={productOptions.map((product) => ({
+              value: product.id.toString(),
+              label: product.name,
+            }))}
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center mb-6">
           <div className="mr-6">
             <Checkbox
@@ -245,7 +255,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
             />
           </div>
         </div>
-        
+
         <div className="flex justify-end space-x-4">
           <Button
             type="button"
@@ -255,12 +265,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onCancel, onSuccess }) 
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading}
-          >
-            {loading ? 'Adding...' : 'Add Product'}
+          <Button type="submit" variant="primary" disabled={loading}>
+            {loading ? "Adding..." : "Add Product"}
           </Button>
         </div>
       </form>
