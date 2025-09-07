@@ -1,6 +1,6 @@
-import React from 'react';
-import CartItem from '../../cart/CartItem/CartItem';
-import CartSummary from '../../cart/CartSummary/CartSummary';
+import React from "react";
+import CartItem from "../../cart/CartItem/CartItem";
+import CartSummary from "../../cart/CartSummary/CartSummary";
 
 interface OrderItem {
   id: number;
@@ -26,9 +26,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   total,
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-6 text-green-800">Order Summary</h2>
-      
+    <div className="bg-[var(--wildlife-bg-light)] rounded-xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold mb-6 text-[var(--wildlife-primary-dark)]">
+        Order Summary
+      </h2>
+
       <div className="space-y-4 mb-6">
         {items.map((item) => (
           <CartItem
@@ -46,7 +48,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           />
         ))}
       </div>
-      
+
       <CartSummary
         subtotal={subtotal}
         tax={tax}

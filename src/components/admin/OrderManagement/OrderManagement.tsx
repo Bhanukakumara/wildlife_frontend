@@ -1,56 +1,87 @@
-import React from 'react';
+import React from "react";
 
 const OrderManagement: React.FC = () => {
   // Mock data for orders
   const orders = [
-    { id: 1001, customer: 'John Doe', date: '2023-05-15', total: 89.97, status: 'Completed' },
-    { id: 1002, customer: 'Jane Smith', date: '2023-05-16', total: 129.96, status: 'Processing' },
-    { id: 1003, customer: 'Bob Johnson', date: '2023-05-17', total: 49.99, status: 'Shipped' },
+    {
+      id: 1001,
+      customer: "John Doe",
+      date: "2023-05-15",
+      total: 89.97,
+      status: "Completed",
+    },
+    {
+      id: 1002,
+      customer: "Jane Smith",
+      date: "2023-05-16",
+      total: 129.96,
+      status: "Processing",
+    },
+    {
+      id: 1003,
+      customer: "Bob Johnson",
+      date: "2023-05-17",
+      total: 49.99,
+      status: "Shipped",
+    },
   ];
 
   return (
-    <div>
+    <div className="p-4 bg-[var(--wildlife-bg-light)] rounded-2xl shadow-[var(--wildlife-shadow)]">
+      <h2 className="text-2xl font-bold mb-4 text-[var(--wildlife-primary-dark)]">
+        Order Management
+      </h2>
+
       <div className="mb-4">
-        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+        <button className="bg-[var(--wildlife-primary)] hover:bg-[var(--wildlife-primary-dark)] text-[var(--wildlife-text-light)] px-4 py-2 rounded-md shadow-[var(--wildlife-shadow-hover)] transition">
           View All Orders
         </button>
       </div>
-      
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
+
+      <div className="overflow-x-auto rounded-xl border border-[var(--wildlife-secondary-light)] shadow-sm">
+        <table className="min-w-full bg-[var(--wildlife-bg-light)]">
+          <thead className="bg-[var(--wildlife-primary-light)] text-[var(--wildlife-text-light)]">
             <tr>
-              <th className="py-2 px-4 border-b">Order ID</th>
-              <th className="py-2 px-4 border-b">Customer</th>
-              <th className="py-2 px-4 border-b">Date</th>
-              <th className="py-2 px-4 border-b">Total</th>
-              <th className="py-2 px-4 border-b">Status</th>
-              <th className="py-2 px-4 border-b">Actions</th>
+              <th className="py-3 px-4 text-left">Order ID</th>
+              <th className="py-3 px-4 text-left">Customer</th>
+              <th className="py-3 px-4 text-left">Date</th>
+              <th className="py-3 px-4 text-left">Total</th>
+              <th className="py-3 px-4 text-left">Status</th>
+              <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td className="py-2 px-4 border-b">#{order.id}</td>
-                <td className="py-2 px-4 border-b">{order.customer}</td>
-                <td className="py-2 px-4 border-b">{order.date}</td>
-                <td className="py-2 px-4 border-b">${order.total}</td>
-                <td className="py-2 px-4 border-b">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    order.status === 'Completed' 
-                      ? 'bg-green-100 text-green-800' 
-                      : order.status === 'Processing' 
-                        ? 'bg-yellow-100 text-yellow-800' 
-                        : 'bg-blue-100 text-blue-800'
-                  }`}>
+            {orders.map((order, idx) => (
+              <tr
+                key={order.id}
+                className={`transition-colors ${
+                  idx % 2 === 0
+                    ? "bg-[var(--wildlife-bg-light)]"
+                    : "bg-[var(--wildlife-secondary-light)]/30"
+                } hover:bg-[var(--wildlife-bg-forest)] hover:text-[var(--wildlife-text-light)]`}
+              >
+                <td className="py-3 px-4 font-medium">#{order.id}</td>
+                <td className="py-3 px-4">{order.customer}</td>
+                <td className="py-3 px-4">{order.date}</td>
+                <td className="py-3 px-4">${order.total.toFixed(2)}</td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      order.status === "Completed"
+                        ? "bg-[var(--wildlife-success)]/20 text-[var(--wildlife-success)]"
+                        : order.status === "Processing"
+                        ? "bg-[var(--wildlife-warning)]/20 text-[var(--wildlife-warning)]"
+                        : "bg-[var(--wildlife-info)]/20 text-[var(--wildlife-info)]"
+                    }`}
+                  >
                     {order.status}
                   </span>
                 </td>
-                <td className="py-2 px-4 border-b">
-                  <button className="text-blue-500 hover:text-blue-700 mr-2">
+                <td className="py-3 px-4 text-right">
+                  <button className="text-[var(--wildlife-info)] hover:text-[var(--wildlife-primary-dark)] font-medium mr-3">
                     View
                   </button>
-                  <button className="text-green-500 hover:text-green-700">
+                  <button className="text-[var(--wildlife-success)] hover:text-[var(--wildlife-primary-dark)] font-medium">
                     Update
                   </button>
                 </td>

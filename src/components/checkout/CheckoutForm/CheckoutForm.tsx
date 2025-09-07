@@ -1,6 +1,6 @@
-import React from 'react';
-import Input from '../../forms/Input/Input';
-import Select from '../../forms/Select/Select';
+import React from "react";
+import Input from "../../forms/Input/Input";
+import Select from "../../forms/Select/Select";
 
 interface CheckoutFormProps {
   formData: {
@@ -13,17 +13,23 @@ interface CheckoutFormProps {
     country: string;
     phone: string;
   };
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 }
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, onChange }) => {
   const countryOptions = [
-    { value: 'us', label: 'United States' },
-    { value: 'ca', label: 'Canada' },
-    { value: 'uk', label: 'United Kingdom' },
-    { value: 'au', label: 'Australia' },
-    { value: 'other', label: 'Other' },
+    { value: "us", label: "United States" },
+    { value: "ca", label: "Canada" },
+    { value: "uk", label: "United Kingdom" },
+    { value: "au", label: "Australia" },
+    { value: "other", label: "Other" },
   ];
+
+  // Common class for inputs & selects
+  const inputClass =
+    "p-2 border border-[var(--wildlife-secondary-light)] rounded-lg focus:border-[var(--wildlife-primary)] focus:ring-[var(--wildlife-primary-light)] focus:ring-1 w-full";
 
   return (
     <div className="space-y-6">
@@ -37,9 +43,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, onChange }) => {
             onChange={onChange}
             required
             fullWidth
+            className={inputClass}
           />
         </div>
-        
+
         <div>
           <Input
             label="Email Address"
@@ -49,10 +56,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, onChange }) => {
             onChange={onChange}
             required
             fullWidth
+            className={inputClass}
           />
         </div>
       </div>
-      
+
       <div>
         <Input
           label="Address"
@@ -62,71 +70,65 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ formData, onChange }) => {
           onChange={onChange}
           required
           fullWidth
+          className={inputClass}
         />
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <Input
-            label="City"
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={onChange}
-            required
-            fullWidth
-          />
-        </div>
-        
-        <div>
-          <Input
-            label="State"
-            type="text"
-            name="state"
-            value={formData.state}
-            onChange={onChange}
-            required
-            fullWidth
-          />
-        </div>
-        
-        <div>
-          <Input
-            label="ZIP Code"
-            type="text"
-            name="zipCode"
-            value={formData.zipCode}
-            onChange={onChange}
-            required
-            fullWidth
-          />
-        </div>
+        <Input
+          label="City"
+          type="text"
+          name="city"
+          value={formData.city}
+          onChange={onChange}
+          required
+          fullWidth
+          className={inputClass}
+        />
+        <Input
+          label="State"
+          type="text"
+          name="state"
+          value={formData.state}
+          onChange={onChange}
+          required
+          fullWidth
+          className={inputClass}
+        />
+        <Input
+          label="ZIP Code"
+          type="text"
+          name="zipCode"
+          value={formData.zipCode}
+          onChange={onChange}
+          required
+          fullWidth
+          className={inputClass}
+        />
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <Select
-            label="Country"
-            name="country"
-            value={formData.country}
-            onChange={onChange}
-            options={countryOptions}
-            required
-            fullWidth
-          />
-        </div>
-        
-        <div>
-          <Input
-            label="Phone Number"
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={onChange}
-            required
-            fullWidth
-          />
-        </div>
+        <Select
+          label="Country"
+          name="country"
+          value={formData.country}
+          onChange={onChange}
+          options={countryOptions}
+          required
+          fullWidth
+          className={inputClass}
+        />
+
+        <Input
+          label="Phone Number"
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={onChange}
+          required
+          fullWidth
+          className={inputClass}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface AdminAuthGuardProps {
   children: React.ReactNode;
@@ -11,12 +11,12 @@ const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({ children }) => {
   const navigate = useNavigate();
 
   // Check if user has admin role
-  const isAdmin = user && user.role && (user.role === 'ADMIN');
+  const isAdmin = user && user.role && user.role === "ADMIN";
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
       // Redirect to home page if not authenticated or not admin
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     }
   }, [user, isAdmin, loading, navigate]);
 

@@ -1,8 +1,2 @@
 @import "tailwindcss";
 @import "./styles/wildlife-theme.css";
-
-:root {
-  --color-main: #00ff59;
-  --color-secondary: #395845;
-  --color-accent: #000000;
-}

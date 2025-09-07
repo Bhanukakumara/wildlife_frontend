@@ -14,7 +14,10 @@ interface AddressFormProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({ shippingInfo, onChange }) => {
+const AddressForm: React.FC<AddressFormProps> = ({
+  shippingInfo,
+  onChange,
+}) => {
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-bold text-green-800">Address Details</h3>
