@@ -34,6 +34,16 @@ const ProductManagement: React.FC = () => {
     }
   };
 
+  const handleDelete = async (productId: string) => {
+    try {
+      await photoService.deleteProduct(productId);
+      // Remove the deleted product from the state
+      setProducts(products.filter(product => product.id !== productId));
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete product');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -90,7 +100,10 @@ const ProductManagement: React.FC = () => {
                       <button className="text-blue-500 hover:text-blue-700 mr-2">
                         Edit
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDelete(product.id)}
+                      >
                         Delete
                       </button>
                     </td>

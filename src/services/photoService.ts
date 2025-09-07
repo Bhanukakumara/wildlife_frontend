@@ -112,10 +112,18 @@ class PhotoService {
 
   async getAllMainProducts(): Promise<{id: number; name: string}[]> {
     try {
-      const response = await apiClient.get<{id: number; name: string}[]>('http://localhost:8080/api/products/get-all');
+      const response = await apiClient.get<{id: number; name: string}[]>('/products/get-all');
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch main products');
+    }
+  }
+
+  async deleteProduct(productItemId: string): Promise<void> {
+    try {
+      await apiClient.delete(`/product-items/delete/${productItemId}`);
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to delete product');
     }
   }
 }
