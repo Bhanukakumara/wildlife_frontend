@@ -3,15 +3,20 @@ import PhotoCard from '../PhotoCard/PhotoCard';
 interface Photo {
   id: string;
   name: string;
+  sku: string;
   description: string;
   price: number;
-  imageUrl: string;
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  photos: Photo[];
+  weight: number;
+  weightUnit: string;
+  length: number;
+  width: number;
+  height: number;
+  customizable: boolean;
+  freeShipping: boolean;
+  qtyInStock: number;
+  productId: number;
+  categoryId: string;
+  image: string; // image file name
 }
 
 interface PhotoGridProps {

@@ -1,6 +1,7 @@
 import apiClient from "./apiClient";
 
 export interface Photo {
+  id: string;
   name: string;
   sku: string;
   description: string;
@@ -15,6 +16,7 @@ export interface Photo {
   qtyInStock: number;
   productId: number;
   categoryId: string;
+  image: string; // image file name
 }
 
 export interface PhotoCategory {

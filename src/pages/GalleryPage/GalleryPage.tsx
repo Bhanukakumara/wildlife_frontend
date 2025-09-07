@@ -6,21 +6,26 @@ import Pagination from "../../components/gallery/Pagination/Pagination";
 import FilterBar from "../../components/gallery/FilterBar/FilterBar";
 import PhotoGrid from "../../components/gallery/PhotoGrid/PhotoGrid";
 import PhotoService from "../../services/photoService";
-import type { Photo as ServicePhoto, PhotoCategory } from "../../services/photoService";
+import type { PhotoCategory } from "../../services/photoService";
 
 // Define the Photo type that includes all properties needed by both PhotoGrid and PhotoCard
 interface Photo {
   id: string;
   name: string;
+  sku: string;
   description: string;
   price: number;
-  imageUrl: string;
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  photos: Photo[];
+  weight: number;
+  weightUnit: string;
+  length: number;
+  width: number;
+  height: number;
+  customizable: boolean;
+  freeShipping: boolean;
+  qtyInStock: number;
+  productId: number;
+  categoryId: string;
+  image: string; // image file name
 }
 
 const GalleryPage = () => {
@@ -38,7 +43,7 @@ const GalleryPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch categories only once
         if (categories.length === 0) {
           const categoriesData = await PhotoService.getCategories();
@@ -49,20 +54,25 @@ const GalleryPage = () => {
         const photosData = await PhotoService.getAllPhotos();
 
         // Map ServicePhoto to Photo type expected by components
-        const mappedPhotos: Photo[] = photosData.map(photo => ({
-          id: photo.id,
-          name: photo.name,
-          imageUrl: photo.imageUrl,
+        const mappedPhotos: Photo[] = photosData.map((photo) => ({
+          id: photo.id || "", // Default to empty string if id is missing
+          name: photo.name || "Unnamed Photo", // Default name
+          sku: photo.sku || "UNKNOWN_SKU", // Default SKU
           description: photo.description || "No description available",
-          price: photo.price || 0, // Default to 0 if price is missing
-          active: true, // Default to active
-          createdAt: photo.createdAt || new Date().toISOString(),
-          updatedAt: photo.updatedAt || new Date().toISOString(),
-          createdBy: "Unknown", // Default value
-          updatedBy: "Unknown", // Default value
-          photos: [], // Empty array as default
+          price: photo.price ?? 0, // Use nullish coalescing for price
+          weight: photo.weight ?? 0, // Default weight
+          weightUnit: photo.weightUnit || "kg", // Default unit
+          length: photo.length ?? 0, // Default length
+          width: photo.width ?? 0, // Default width
+          height: photo.height ?? 0, // Default height
+          customizable: photo.customizable ?? false, // Default to false
+          freeShipping: photo.freeShipping ?? false, // Default to false
+          qtyInStock: photo.qtyInStock ?? 0, // Default to 0
+          productId: photo.productId ?? 0, // Default to 0
+          categoryId: photo.categoryId || "", // Default to empty string
+          image: photo.image || "", // Use image file name or empty string
         }));
-
+        console.log("Mapped Photos:", mappedPhotos);
         setPhotos(mappedPhotos);
         // Note: photosData is an array, not an object with totalPages property
         // We'll need to calculate totalPages based on the array length and photosPerPage

@@ -3,14 +3,20 @@ import { Link } from "react-router-dom";
 interface Photo {
   id: string;
   name: string;
+  sku: string;
   description: string;
-  imageUrl: string;
   price: number;
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
+  weight: number;
+  weightUnit: string;
+  length: number;
+  width: number;
+  height: number;
+  customizable: boolean;
+  freeShipping: boolean;
+  qtyInStock: number;
+  productId: number;
+  categoryId: string;
+  image: string; // image file name
 }
 
 interface PhotoCardProps {
@@ -22,8 +28,8 @@ const PhotoCard = ({ photo }: PhotoCardProps) => {
     <Link to={`/product-items/${photo.id}`}>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer">
         <div className="h-48 bg-gradient-to-r from-green-300 to-emerald-400">
-          {photo.imageUrl ? (
-            <img src={photo.imageUrl} alt={photo.name} className="w-full h-full object-cover" />
+          {photo.image ? (
+            <img src={photo.image} alt={photo.name} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-white font-bold">
               No Image
