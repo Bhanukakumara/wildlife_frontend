@@ -26,14 +26,14 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="py-20 md:py-32">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-[var(--wildlife-primary-dark)]">
             Capture the Wild
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-[var(--wildlife-text-dark)]">
             Discover breathtaking wildlife photography from around the world
           </p>
           <button
-            className="bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-[var(--color-main)] font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
+            className="bg-[var(--wildlife-primary)] hover:bg-[var(--wildlife-primary-dark)] text-[var(--wildlife-text-light)] font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105"
             onClick={() => navigate("/gallery")}
           >
             Explore Gallery
@@ -42,123 +42,78 @@ const HomePage = () => {
       </section>
 
       {/* Featured Categories */}
-      <section className="py-16 bg-[var(--color-main)]/80">
+      <section className="py-16 bg-[var(--wildlife-bg-light)]/80">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-[var(--color-accent)]">
+          <h2 className="text-3xl font-bold text-center mb-12 text-[var(--wildlife-primary-dark)]">
             Featured Categories
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-[var(--color-main)]/90 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
-              <div
-                className="h-48 bg-cover bg-center"
-                style={{ backgroundImage: `url(${cate_01})` }}
-              ></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
-                  African Safari
-                </h3>
-                <p className="text-[var(--color-accent)]/80">
-                  Majestic lions, elephants, and the great migration
-                </p>
-              </div>
-            </div>
-            <div className="bg-[var(--color-main)]/90 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
-              <div
-                className="h-48 bg-cover bg-center"
-                style={{ backgroundImage: `url(${cate_02})` }}
-              ></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
-                  Birds of Prey
-                </h3>
-                <p className="text-[var(--color-accent)]/80">
-                  Stunning raptors from eagles to owls
-                </p>
-              </div>
-            </div>
-            <div className="bg-[var(--color-main)]/90 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105">
-              <div
-                className="h-48 bg-cover bg-center"
-                style={{ backgroundImage: `url(${cate_03})` }}
-              ></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
-                  Marine Life
-                </h3>
-                <p className="text-[var(--color-accent)]/80">
-                  Underwater wonders from whales to coral reefs
-                </p>
-              </div>
-            </div>
+            {[cate_01, cate_02, cate_03].map((image, index) => {
+              const titles = ["African Safari", "Birds of Prey", "Marine Life"];
+              const descriptions = [
+                "Majestic lions, elephants, and the great migration",
+                "Stunning raptors from eagles to owls",
+                "Underwater wonders from whales to coral reefs",
+              ];
+              return (
+                <div
+                  key={index}
+                  className="bg-[var(--wildlife-bg-light)]/90 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105"
+                >
+                  <div
+                    className="h-48 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${image})` }}
+                  ></div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2 text-[var(--wildlife-primary-dark)]">
+                      {titles[index]}
+                    </h3>
+                    <p className="text-[var(--wildlife-text-muted)]/80">
+                      {descriptions[index]}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Featured Photos */}
-      <section className="py-16 bg-[var(--color-main)]/80">
+      <section className="py-16 bg-[var(--wildlife-bg-light)]/80">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-[var(--color-accent)]">
+          <h2 className="text-3xl font-bold text-center mb-12 text-[var(--wildlife-primary-dark)]">
             Featured Photos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              {
-                id: "1",
-                name: "Majestic Lion",
-                description: "Photographer Name",
-                imageUrl: wild_01,
-                price: 49.99,
-                active: true,
-                createdAt: "",
-                updatedAt: "",
-                createdBy: "",
-                updatedBy: "",
-              },
-              {
-                id: "2",
-                name: "Elegant Elephant",
-                description: "Photographer Name",
-                imageUrl: wild_02,
-                price: 59.99,
-                active: true,
-                createdAt: "",
-                updatedAt: "",
-                createdBy: "",
-                updatedBy: "",
-              },
-              {
-                id: "3",
-                name: "Graceful Giraffe",
-                description: "Photographer Name",
-                imageUrl: wild_03,
-                price: 69.99,
-                active: true,
-                createdAt: "",
-                updatedAt: "",
-                createdBy: "",
-                updatedBy: "",
-              },
-              {
-                id: "4",
-                name: "Mighty Rhino",
-                description: "Photographer Name",
-                imageUrl: wild_04,
-                price: 79.99,
-                active: true,
-                createdAt: "",
-                updatedAt: "",
-                createdBy: "",
-                updatedBy: "",
-              },
-            ].map((photo) => (
-              <PhotoCard key={photo.id} photo={photo} />
+            {[wild_01, wild_02, wild_03, wild_04].map((image, idx) => (
+              <PhotoCard
+                key={idx}
+                photo={{
+                  id: `${idx + 1}`,
+                  name: [
+                    "Majestic Lion",
+                    "Elegant Elephant",
+                    "Graceful Giraffe",
+                    "Mighty Rhino",
+                  ][idx],
+                  description: "Photographer Name",
+                  imageUrl: image,
+                  price: [49.99, 59.99, 69.99, 79.99][idx],
+                  active: true,
+                  createdAt: "",
+                  updatedAt: "",
+                  createdBy: "",
+                  updatedBy: "",
+                }}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-[linear-gradient(to_right,var(--color-main),var(--color-secondary))] bg-opacity-80 text-[var(--color-accent)]">
+      <section className="py-20 bg-[var(--wildlife-primary-dark)]/80 text-[var(--wildlife-text-light)]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Join Our Community
@@ -170,9 +125,9 @@ const HomePage = () => {
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-grow px-4 py-3 rounded-l-lg text-[var(--color-accent)] focus:outline-none bg-[var(--color-main)]/90"
+              className="flex-grow px-4 py-3 rounded-l-lg text-[var(--wildlife-text-dark)] focus:outline-none bg-[var(--wildlife-bg-light)]/90 border border-[var(--wildlife-secondary-light)]"
             />
-            <button className="bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-[var(--color-main)] font-bold py-3 px-6 rounded-r-lg transition duration-300">
+            <button className="bg-[var(--wildlife-primary)] hover:bg-[var(--wildlife-primary-dark)] text-[var(--wildlife-text-light)] font-bold py-3 px-6 rounded-r-lg transition duration-300">
               Subscribe
             </button>
           </div>
