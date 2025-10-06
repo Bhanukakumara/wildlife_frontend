@@ -5,10 +5,8 @@ import CategoryFilter from "../../components/gallery/CategoryFilter/CategoryFilt
 import Pagination from "../../components/gallery/Pagination/Pagination";
 import FilterBar from "../../components/gallery/FilterBar/FilterBar";
 import PhotoGrid from "../../components/gallery/PhotoGrid/PhotoGrid";
-import PhotoService from "../../services/photoService";
-import type { PhotoCategory } from "../../services/photoService";
+import PhotoService, { type PhotoCategory, type PhotoSearchRequest } from "../../services/photoService";
 
-// Define the Photo type that includes all properties needed by both PhotoGrid and PhotoCard
 interface Photo {
   id: string;
   name: string;
@@ -25,17 +23,17 @@ interface Photo {
   qtyInStock: number;
   productId: number;
   categoryId: string;
-  image: string; // image file name
+  imageUrl: string; // Changed from 'image' to 'imageUrl' for consistency
 }
 
 const GalleryPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("newest");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [categories, setCategories] = useState<PhotoCategory[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const photosPerPage = 12;
 
@@ -43,6 +41,7 @@ const GalleryPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError(null);
 
         // Fetch categories only once
         if (categories.length === 0) {
@@ -50,35 +49,41 @@ const GalleryPage = () => {
           setCategories(categoriesData);
         }
 
-        // Fetch photos
-        const photosData = await PhotoService.getAllPhotos();
+        // Prepare search parameters
+        const searchParams: PhotoSearchRequest = {
+          category: selectedCategory === "all" ? undefined : selectedCategory,
+          sort: sortBy,
+          page: currentPage - 1, // Backend typically expects 0-based page index
+          size: photosPerPage,
+        };
 
-        // Map ServicePhoto to Photo type expected by components
-        const mappedPhotos: Photo[] = photosData.map((photo) => ({
-          id: photo.id || "", // Default to empty string if id is missing
-          name: photo.name || "Unnamed Photo", // Default name
-          sku: photo.sku || "UNKNOWN_SKU", // Default SKU
+        // Fetch photos with pagination, filtering, and sorting
+        const response = await PhotoService.searchPhotos(searchParams);
+
+        // Map response to Photo type
+        const mappedPhotos: Photo[] = response.content.map((photo) => ({
+          id: photo.id || "",
+          name: photo.name || "Unnamed Photo",
+          sku: photo.sku || "UNKNOWN_SKU",
           description: photo.description || "No description available",
-          price: photo.price ?? 0, // Use nullish coalescing for price
-          weight: photo.weight ?? 0, // Default weight
-          weightUnit: photo.weightUnit || "kg", // Default unit
-          length: photo.length ?? 0, // Default length
-          width: photo.width ?? 0, // Default width
-          height: photo.height ?? 0, // Default height
-          customizable: photo.customizable ?? false, // Default to false
-          freeShipping: photo.freeShipping ?? false, // Default to false
-          qtyInStock: photo.qtyInStock ?? 0, // Default to 0
-          productId: photo.productId ?? 0, // Default to 0
-          categoryId: photo.categoryId || "", // Default to empty string
-          image: photo.image || "", // Use image file name or empty string
+          price: photo.price ?? 0,
+          weight: photo.weight ?? 0,
+          weightUnit: photo.weightUnit || "kg",
+          length: photo.length ?? 0,
+          width: photo.width ?? 0,
+          height: photo.height ?? 0,
+          customizable: photo.customizable ?? false,
+          freeShipping: photo.freeShipping ?? false,
+          qtyInStock: photo.qtyInStock ?? 0,
+          productId: photo.productId ?? 0,
+          categoryId: photo.categoryId || "",
+          imageUrl: photo.imageUrl || "", // Use imageUrl
         }));
-        console.log("Mapped Photos:", mappedPhotos);
+
         setPhotos(mappedPhotos);
-        // Note: photosData is an array, not an object with totalPages property
-        // We'll need to calculate totalPages based on the array length and photosPerPage
-        setTotalPages(Math.ceil(photosData.length / photosPerPage));
-      } catch (err) {
-        setError("Failed to fetch gallery data");
+        setTotalPages(response.totalPages);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch gallery data. Please try again.");
         console.error("Error fetching gallery data:", err);
       } finally {
         setLoading(false);
@@ -86,7 +91,13 @@ const GalleryPage = () => {
     };
 
     fetchData();
-  }, [selectedCategory, currentPage, sortBy, categories.length]);
+  }, [selectedCategory, currentPage, sortBy]); // Removed categories.length
+
+  const handleRetry = () => {
+    setCurrentPage(1); // Reset to first page
+    setError(null); // Clear error
+    // Re-run will be triggered by useEffect due to currentPage change
+  };
 
   if (loading) {
     return (
@@ -111,6 +122,12 @@ const GalleryPage = () => {
           >
             <strong className="font-bold">Error! </strong>
             <span className="block sm:inline">{error}</span>
+            <button
+              onClick={handleRetry}
+              className="ml-4 inline-flex items-center px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
         <Footer />
@@ -148,7 +165,10 @@ const GalleryPage = () => {
                 <CategoryFilter
                   selectedCategory={selectedCategory}
                   onSelectCategory={setSelectedCategory}
-                  categories={categories}
+                  categories={[{
+                    id: "all", name: "All Categories",
+                    description: ""
+                  }, ...categories]}
                 />
               </div>
             </div>

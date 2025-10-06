@@ -55,7 +55,7 @@ class CartService {
 
   async updateCartItem(id: string, quantity: number): Promise<Cart> {
     try {
-      const response = await apiClient.put<Cart>(`/api/shopping-cart/cart/items/${id}`, { quantity });
+      const response = await apiClient.put<Cart>(`/shopping-cart/cart/items/${id}`, { quantity });
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to update cart item');

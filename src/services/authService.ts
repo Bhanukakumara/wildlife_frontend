@@ -27,7 +27,7 @@ export interface User {
 class AuthService {
   async login(credentials: LoginRequest): Promise<{ token: string }> { // Updated return type
     try {
-      const response = await apiClient.post<{ token: string }>('http://localhost:8080/api/auth/login', credentials); // Updated endpoint and response type
+      const response = await apiClient.post<{ token: string }>('/auth/login', credentials); // Updated endpoint and response type
       
       if (response.data && response.data.token) {
         localStorage.setItem('token', response.data.token); // Store token in local storage
@@ -42,7 +42,7 @@ class AuthService {
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>('http://localhost:8080/api/auth/create', userData);
+      const response = await apiClient.post<AuthResponse>('/auth/create', userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');

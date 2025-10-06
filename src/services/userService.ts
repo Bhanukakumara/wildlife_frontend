@@ -62,7 +62,7 @@ export interface Page<T> {
 class UserService {
   async createUser(userData: UserCreateDto): Promise<User> {
     try {
-      const response = await apiClient.post<User>('http://localhost:8080/api/user/create', userData);
+      const response = await apiClient.post<User>('/user/create', userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch profile');
@@ -71,7 +71,7 @@ class UserService {
 
   async getUserById(userId: number): Promise<User> {
     try {
-      const response = await apiClient.get<User>(`/api/user/get-by-userId/${userId}`);
+      const response = await apiClient.get<User>(`/user/get-by-userId/${userId}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to fetch user with ID ${userId}`);
@@ -80,7 +80,7 @@ class UserService {
 
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const response = await apiClient.get<User>(`/api/user/get-by-email/${email}`);
+      const response = await apiClient.get<User>(`/user/get-by-email/${email}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to fetch user with email ${email}`);
@@ -98,7 +98,7 @@ class UserService {
 
   async searchUsers(searchDto: UserSearchDto, page: number = 0, size: number = 10, sort: string = 'id,asc'): Promise<Page<User>> {
     try {
-      const response = await apiClient.post<Page<User>>('/api/user/search', searchDto, {
+      const response = await apiClient.post<Page<User>>('/user/search', searchDto, {
         params: { page, size, sort }
       });
       return response.data;
@@ -109,7 +109,7 @@ class UserService {
 
   async updateUser(userId: number, userData: UserCreateDto): Promise<User> {
     try {
-      const response = await apiClient.put<User>(`/api/user/update/${userId}`, userData);
+      const response = await apiClient.put<User>(`/user/update/${userId}`, userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to update user with ID ${userId}`);
@@ -118,7 +118,7 @@ class UserService {
 
   async partialUpdateUser(userId: number, userData: Partial<UserCreateDto>): Promise<User> {
     try {
-      const response = await apiClient.patch<User>(`/api/user/partial-update/${userId}`, userData);
+      const response = await apiClient.patch<User>(`/user/partial-update/${userId}`, userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to partially update user with ID ${userId}`);
@@ -127,7 +127,7 @@ class UserService {
 
   async updatePassword(userId: number, passwordDto: UserUpdatePasswordDto): Promise<void> {
     try {
-      await apiClient.patch(`/api/user/update-password/${userId}`, passwordDto);
+      await apiClient.patch(`/user/update-password/${userId}`, passwordDto);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to update password for user with ID ${userId}`);
     }
@@ -137,7 +137,7 @@ class UserService {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await apiClient.post<User>(`/api/user/upload-profile-picture/${userId}`, formData, {
+      const response = await apiClient.post<User>(`/user/upload-profile-picture/${userId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -150,7 +150,7 @@ class UserService {
 
   async deleteUser(userId: number): Promise<void> {
     try {
-      await apiClient.delete(`/api/user/delete/${userId}`);
+      await apiClient.delete(`/user/delete/${userId}`);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to delete user with ID ${userId}`);
     }
@@ -158,7 +158,7 @@ class UserService {
 
   async toggleUserStatus(userId: number): Promise<User> {
     try {
-      const response = await apiClient.patch<User>(`/api/user/toggle-status/${userId}`);
+      const response = await apiClient.patch<User>(`/user/toggle-status/${userId}`);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || `Failed to toggle status for user with ID ${userId}`);
@@ -167,7 +167,7 @@ class UserService {
 
   async requestPasswordReset(email: string): Promise<void> {
     try {
-      await apiClient.post('/api/user/request-password-reset', null, {
+      await apiClient.post('/user/request-password-reset', null, {
         params: { email },
       });
     } catch (error: any) {
@@ -177,7 +177,7 @@ class UserService {
 
   async resetPassword(token: string, passwordDto: UserUpdatePasswordDto): Promise<void> {
     try {
-      await apiClient.post('/api/user/reset-password', passwordDto, {
+      await apiClient.post('/user/reset-password', passwordDto, {
         params: { token },
       });
     } catch (error: any) {

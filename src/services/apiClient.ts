@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios';
 
 // Create axios instance with default config
 const apiClient: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api', // Default Spring Boot backend URL
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL || 'http://localhost:8080/api', // Default Spring Boot backend URL
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ interface Photo {
   qtyInStock: number;
   productId: number;
   categoryId: string;
-  image: string; // image file name
+  imageUrl: string; // Changed from 'image' to 'imageUrl' for consistency
 }
 
 interface PhotoGridProps {
