@@ -7,7 +7,6 @@ export interface User {
   middleName?: string; // Optional
   lastName: string;
   displayName: string;
-  profilePicture?: string; // Optional
   phoneNumber?: string; // Optional
   dateOfBirth?: string; // Using string for simplicity, can be converted to Date
   gender?: string; // Can be more specific if you have a Gender enum in frontend
@@ -32,7 +31,6 @@ export interface UserCreateDto {
   middleName?: string;
   lastName: string;
   displayName: string;
-  profilePicture?: string;
   password?: string; // Password might be optional on update
   phoneNumber?: string;
   dateOfBirth?: string;
@@ -62,7 +60,7 @@ export interface Page<T> {
 class UserService {
   async createUser(userData: UserCreateDto): Promise<User> {
     try {
-      const response = await apiClient.post<User>('/user/create', userData);
+      const response = await apiClient.post<User>('/user/register', userData);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch profile');

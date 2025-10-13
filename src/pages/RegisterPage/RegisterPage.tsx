@@ -44,7 +44,6 @@ const RegisterPage = () => {
       phoneNumber: formData.phoneNumber,
       dateOfBirth: formData.dateOfBirth, // This might need formatting depending on backend
       gender: formData.gender as any, // Type casting may be needed
-      profilePicture: '', // Assuming profile picture upload is separate
       role: 'CUSTOMER' as any, // Default role
       accountStatus: 'ACTIVE' as any, // Default status
     };
