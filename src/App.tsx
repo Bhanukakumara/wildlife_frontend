@@ -12,7 +12,6 @@ import AboutPage from './pages/AboutPage/AboutPage';
 import ContactPage from './pages/ContactPage/ContactPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
-import ProfilePage from './pages/ProfilePage/ProfilePage';
 import CartPage from './pages/CartPage/CartPage';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage/OrderConfirmationPage';
@@ -34,11 +33,11 @@ const App = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/profile" element={
+            {/* <Route path="/profile" element={
               <AuthGuard>
                 <ProfilePage />
               </AuthGuard>
-            } />
+            } /> */}
             <Route path="/cart" element={
               <AuthGuard>
                 <CartPage />

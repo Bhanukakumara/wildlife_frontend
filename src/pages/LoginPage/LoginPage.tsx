@@ -23,16 +23,14 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
     try {
-      const success = await login(formData.email, formData.password);
+      const success = await login(formData.email, formData.password);  // Pass rememberMe to login if your AuthContext supports it
       
       if (success) {
-        // Save user data based on "Remember me" checkbox
-        const storage = rememberMe ? localStorage : sessionStorage;
-        // The user data is already set in the AuthContext, we just need to save it to storage
-        // The AuthContext handles saving to localStorage, but we also respect the rememberMe setting
+        // If your AuthContext doesn't handle rememberMe in login, uncomment and adjust below:
+        // const storage = rememberMe ? localStorage : sessionStorage;
+        // storage.setItem('rememberMe', 'true');  // Or save any session-specific data
         
-        // Check if user is admin and redirect accordingly
-        // We can now access the user directly from the AuthContext
+        // Redirect based on role
         if (user) {
           const isAdmin = user.role && (user.role === 'admin' || user.role === 'ADMIN');
           console.log("User role:", user.role);
@@ -75,6 +73,12 @@ const LoginPage = () => {
               <h2 className="text-2xl font-bold text-center mb-8 text-green-800">
                 Welcome Back
               </h2>
+
+              {error && (
+                <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                  {error}
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-6">

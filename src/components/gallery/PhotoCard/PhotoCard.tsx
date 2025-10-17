@@ -1,29 +1,6 @@
 import { Link } from "react-router-dom";
 
-interface Photo {
-  id: string;
-  name: string;
-  sku: string;
-  description: string;
-  price: number;
-  weight: number;
-  weightUnit: string;
-  length: number;
-  width: number;
-  height: number;
-  customizable: boolean;
-  freeShipping: boolean;
-  qtyInStock: number;
-  productId: number;
-  categoryId: string;
-  imageUrl: string; // Changed from 'image' to 'imageUrl' for consistency
-}
-
-interface PhotoCardProps {
-  photo: Photo;
-}
-
-const PhotoCard = ({ photo }: PhotoCardProps) => {
+const PhotoCard = ({ photo }: any) => {
   return (
     <Link to={`/product-items/${photo.id}`}>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer">

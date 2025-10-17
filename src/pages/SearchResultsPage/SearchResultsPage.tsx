@@ -4,6 +4,7 @@ import Navbar from '../../components/common/Navbar/Navbar.tsx';
 import Footer from '../../components/common/Footer/Footer';
 import PhotoGrid from '../../components/gallery/PhotoGrid/PhotoGrid';
 import Pagination from '../../components/gallery/Pagination/Pagination';
+import { allPhotos } from '../GalleryPage/galleryData.ts';
 
 const SearchResultsPage = () => {
   const location = useLocation();
@@ -13,29 +14,9 @@ const SearchResultsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const photosPerPage = 12;
 
-  // Mock search results
-  const allPhotos = [
-    { id: 1, title: "Lion Portrait", photographer: "John Smith", price: 49.99 },
-    { id: 2, title: "Eagle in Flight", photographer: "Jane Doe", price: 39.99 },
-    { id: 3, title: "Underwater Dolphin", photographer: "Mike Johnson", price: 59.99 },
-    { id: 4, title: "Butterfly on Flower", photographer: "Sarah Wilson", price: 29.99 },
-    { id: 5, title: "Elephant Family", photographer: "David Brown", price: 69.99 },
-    { id: 6, title: "Penguin Colony", photographer: "Lisa Garcia", price: 45.99 },
-    { id: 7, title: "Tiger in Jungle", photographer: "Robert Kim", price: 54.99 },
-    { id: 8, title: "Parrot Close-up", photographer: "Emma Davis", price: 34.99 },
-    { id: 9, title: "Sea Turtle", photographer: "Chris Miller", price: 42.99 },
-    { id: 10, title: "Deer in Forest", photographer: "Amy Taylor", price: 37.99 },
-    { id: 11, title: "Hummingbird", photographer: "Mark Anderson", price: 32.99 },
-    { id: 12, title: "Snake in Grass", photographer: "Jennifer Lee", price: 28.99 },
-    { id: 13, title: "Wolf Pack", photographer: "Thomas Clark", price: 52.99 },
-    { id: 14, title: "Gorilla Portrait", photographer: "Maria Rodriguez", price: 64.99 },
-    { id: 15, title: "Whale Breaching", photographer: "James Wilson", price: 74.99 },
-  ];
-
-  // Filter photos based on search query
+  // Filter photos based on search query (updated to search name and photographer)
   const filteredPhotos = allPhotos.filter(photo => 
-    photo.title.toLowerCase().includes(query.toLowerCase()) ||
-    photo.photographer.toLowerCase().includes(query.toLowerCase())
+    photo.name.toLowerCase().includes(query.toLowerCase())
   );
 
   // Pagination
