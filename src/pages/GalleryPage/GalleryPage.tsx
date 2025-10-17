@@ -5,7 +5,7 @@ import CategoryFilter from "../../components/gallery/CategoryFilter/CategoryFilt
 import Pagination from "../../components/gallery/Pagination/Pagination";
 import FilterBar from "../../components/gallery/FilterBar/FilterBar";
 import PhotoGrid from "../../components/gallery/PhotoGrid/PhotoGrid";
-import PhotoService, { type PhotoCategory, type PhotoSearchRequest } from "../../services/photoService";
+import PhotoService, { type PhotoCategory } from "../../services/photoService";
 
 interface Photo {
   id: string;
@@ -32,10 +32,10 @@ const GalleryPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [categories, setCategories] = useState<PhotoCategory[]>([]);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const photosPerPage = 12;
+  const [searchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,55 +43,50 @@ const GalleryPage = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch categories only once
+        // Fetch categories only once (optional, keep if needed elsewhere)
         if (categories.length === 0) {
           const categoriesData = await PhotoService.getCategories();
           setCategories(categoriesData);
         }
 
-        // Prepare search parameters
-        const searchParams: PhotoSearchRequest = {
-          category: selectedCategory === "all" ? undefined : selectedCategory,
-          sort: sortBy,
-          page: currentPage - 1, // Backend typically expects 0-based page index
-          size: photosPerPage,
-        };
+        // Only fetch if there's a keyword; otherwise, skip or show all (adjust as needed)
+        if (searchTerm.trim()) {
+          const response = await PhotoService.searchPhotos({ searchTerm });
 
-        // Fetch photos with pagination, filtering, and sorting
-        const response = await PhotoService.searchPhotos(searchParams);
+          // Map response to Photo type (full list, no pagination)
+          const mappedPhotos: Photo[] = response.map((photo) => ({
+            id: photo.id || "",
+            name: photo.name || "Unnamed Photo",
+            sku: photo.sku || "UNKNOWN_SKU",
+            description: photo.description || "No description available",
+            price: photo.price ?? 0,
+            weight: photo.weight ?? 0,
+            weightUnit: photo.weightUnit || "kg",
+            length: photo.length ?? 0,
+            width: photo.width ?? 0,
+            height: photo.height ?? 0,
+            customizable: photo.customizable ?? false,
+            freeShipping: photo.freeShipping ?? false,
+            qtyInStock: photo.qtyInStock ?? 0,
+            productId: photo.productId ?? 0,
+            categoryId: photo.categoryId || "",
+            imageUrl: photo.imageUrl || "",
+          }));
 
-        // Map response to Photo type
-        const mappedPhotos: Photo[] = response.content.map((photo) => ({
-          id: photo.id || "",
-          name: photo.name || "Unnamed Photo",
-          sku: photo.sku || "UNKNOWN_SKU",
-          description: photo.description || "No description available",
-          price: photo.price ?? 0,
-          weight: photo.weight ?? 0,
-          weightUnit: photo.weightUnit || "kg",
-          length: photo.length ?? 0,
-          width: photo.width ?? 0,
-          height: photo.height ?? 0,
-          customizable: photo.customizable ?? false,
-          freeShipping: photo.freeShipping ?? false,
-          qtyInStock: photo.qtyInStock ?? 0,
-          productId: photo.productId ?? 0,
-          categoryId: photo.categoryId || "",
-          imageUrl: photo.imageUrl || "", // Use imageUrl
-        }));
-
-        setPhotos(mappedPhotos);
-        setTotalPages(response.totalPages);
+          setPhotos(mappedPhotos);
+        } else {
+          setPhotos([]); // Or fetch all if backend supports empty keyword
+        }
       } catch (err: any) {
-        setError(err.message || "Failed to fetch gallery data. Please try again.");
-        console.error("Error fetching gallery data:", err);
+        setError(err.message || "Failed to fetch data. Please try again.");
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [selectedCategory, currentPage, sortBy]); // Removed categories.length
+  }, [searchTerm]);
 
   const handleRetry = () => {
     setCurrentPage(1); // Reset to first page

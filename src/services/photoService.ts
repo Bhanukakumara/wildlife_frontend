@@ -41,11 +41,7 @@ export interface PaginatedResponse<T> {
 }
 
 export interface PhotoSearchRequest {
-  category?: string;
-  searchTerm?: string;
-  page?: number;
-  size?: number;
-  sort?: string;
+  searchTerm: string;
 }
 
 class PhotoService {
@@ -58,22 +54,18 @@ class PhotoService {
     }
   }
 
-  async searchPhotos(params: PhotoSearchRequest): Promise<PaginatedResponse<Photo>> {
-    try {
-      const response = await apiClient.get<PaginatedResponse<Photo>>('/product-items/search', {
-        params: {
-          category: params.category,
-          searchTerm: params.searchTerm,
-          page: params.page,
-          size: params.size,
-          sort: params.sort,
-        },
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Failed to search photos");
-    }
+  async searchPhotos(params: PhotoSearchRequest): Promise<Photo[]> {
+  try {
+    const response = await apiClient.get<Photo[]>('/product-items/search', {
+      params: {
+        keyword: params.searchTerm, // Map to backend's 'keyword' param
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Failed to search photos");
   }
+}
 
   async getPhotoById(id: string): Promise<Photo> {
     try {
