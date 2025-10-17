@@ -16,14 +16,14 @@ interface Photo {
   qtyInStock: number;
   productId: number;
   categoryId: string;
-  imageUrl: string; // Changed from 'image' to 'imageUrl' for consistency
+  imageUrl: string;
 }
 
 interface PhotoGridProps {
   photos: Photo[];
 }
 
-const PhotoGrid = ({ photos }: PhotoGridProps) => {
+const PhotoGrid = ({ photos = [] }: PhotoGridProps) => {  // Default to empty array
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {photos.map((photo) => (

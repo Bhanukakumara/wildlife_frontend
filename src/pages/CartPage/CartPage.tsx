@@ -7,14 +7,12 @@ import EmptyCart from '../../components/cart/EmptyCart/EmptyCart';
 import CartSummary from '../../components/cart/CartSummary/CartSummary';
 import CartService from '../../services/cartService';
 import type { Cart } from '../../services/cartService';
-import { useCart } from '../../context/CartContext';
 import authService from '../../services/authService.ts';
 
 const CartPage = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { fetchCart } = useCart();
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -42,7 +40,6 @@ const CartPage = () => {
     try {
       const updatedCart = await CartService.updateCartItem(id, quantity);
       setCart(updatedCart);
-      await fetchCart(); // Update cart count in Navbar
     } catch (err) {
       setError('Failed to update item quantity');
       console.error('Error updating quantity:', err);
@@ -53,7 +50,6 @@ const CartPage = () => {
     try {
       const updatedCart = await CartService.removeCartItem(id);
       setCart(updatedCart);
-      await fetchCart(); // Update cart count in Navbar
     } catch (err) {
       setError('Failed to remove item');
       console.error('Error removing item:', err);
@@ -64,7 +60,6 @@ const CartPage = () => {
     try {
       await CartService.clearCart();
       setCart({ items: [], totalItems: 0, totalPrice: 0 });
-      await fetchCart(); // Update cart count in Navbar
     } catch (err) {
       setError('Failed to clear cart');
       console.error('Error clearing cart:', err);

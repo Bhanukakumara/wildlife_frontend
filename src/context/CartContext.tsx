@@ -52,7 +52,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // fetchCart();
+    fetchCart();
     fetchCartItemCount();
   }, [user]);
 

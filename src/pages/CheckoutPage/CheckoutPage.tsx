@@ -5,7 +5,6 @@ import Footer from "../../components/common/Footer/Footer";
 import ShippingForm from "../../components/checkout/ShippingForm/ShippingForm";
 import PaymentMethods from "../../components/checkout/PaymentMethods/PaymentMethods";
 import PaymentForm from "../../components/checkout/PaymentForm/PaymentForm";
-import OrderSummary from "../../components/checkout/OrderSummary/OrderSummary";
 import AddressForm from "../../components/checkout/AddressForm/AddressForm";
 
 const CheckoutPage = () => {
@@ -38,32 +37,6 @@ const CheckoutPage = () => {
   ];
 
   // Mock cart items for order summary
-  const cartItems = [
-    {
-      id: 1,
-      title: "Lion Portrait",
-      photographer: "John Smith",
-      price: 49.99,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      title: "Eagle in Flight",
-      photographer: "Jane Doe",
-      price: 39.99,
-      quantity: 2,
-    },
-  ];
-
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const shipping = shippingMethods.find(
-    (method) => method.id === selectedShippingMethod
-  )?.price || 5.99; // Use selected shipping method price
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
 
   const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -154,13 +127,6 @@ const CheckoutPage = () => {
 
               {/* Order Summary */}
               <div className="lg:w-1/3">
-                <OrderSummary
-                  items={cartItems}
-                  subtotal={subtotal}
-                  shipping={shipping}
-                  tax={tax}
-                  total={total}
-                />
 
                 <div className="mt-6">
                   <button
